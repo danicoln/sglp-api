@@ -1,0 +1,37 @@
+package com.sglp.api.domain.model;
+
+import jakarta.persistence.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.time.OffsetDateTime;
+
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Getter
+@Setter
+@Entity
+@Table(name = "laudo_pericial")
+public class LaudoPericial {
+
+    @EqualsAndHashCode.Include
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String objetivo;
+    @OneToOne
+    private ObjetoLaudo objeto;
+    private String metodologiaAplicada;
+
+    @OneToOne
+    private ExameDaMateria exameDaMateria;
+    private String historico;
+
+    @OneToMany
+    private Quesito quesito;
+
+    private String conclusao;
+    private String introducao;
+    private OffsetDateTime dataDoLaudo;
+}
