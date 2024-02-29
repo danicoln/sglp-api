@@ -1,13 +1,16 @@
 package com.sglp.sglp_api.domain.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
+@Document
 public class Endereco {
 
-    private Long id;
+    private String id;
     private String logradouro;
     private String numero;
     private String bairro;

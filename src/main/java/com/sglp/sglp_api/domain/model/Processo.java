@@ -1,14 +1,19 @@
 package com.sglp.sglp_api.domain.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
+@Document(collection = "processos")
 public class Processo {
 
-    private Long id;
+    private String id;
     private String numero;
     private String comarca;
     private String vara;

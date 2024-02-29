@@ -1,4 +1,4 @@
-package com.sglp.sglp_api.api.controller;
+package com.sglp.sglp_api.api.resource;
 
 import com.sglp.sglp_api.api.assembler.LaudoPericialModelAssembler;
 import com.sglp.sglp_api.api.dto.input.LaudoPericialInput;
@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/laudos")
-public class LaudoPericialController {
+public class LaudoPericialResource {
 
     @Autowired
     private LaudoPericialService laudoPericialService;

@@ -1,16 +1,20 @@
 package com.sglp.sglp_api.domain.model;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
+@Document
 public class DadosPerito {
 
-    private Long id;
-
+    @Id
+    @EqualsAndHashCode.Include
+    private String id;
     @NotBlank
     private String ccm;
     @NotBlank
