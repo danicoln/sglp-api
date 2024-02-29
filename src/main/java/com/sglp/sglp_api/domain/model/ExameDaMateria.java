@@ -1,0 +1,17 @@
+package com.sglp.sglp_api.domain.model;
+
+
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.List;
+
+@Getter
+@Setter
+public class ExameDaMateria {
+
+    private Long id;
+    private List<ObjetoLaudo> objetos;
+    private String descricao;
+}
