@@ -1,20 +1,21 @@
 package com.sglp.sglp_api.domain.model;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.OffsetDateTime;
 
-@Getter
-@Setter
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode
+@Document(collection = "nomeacoes")
 public class Nomeacao {
 
-    private Long id;
-
-    private Perito perito;
-
+    @Id
+    @EqualsAndHashCode.Include
+    private String id;
     private OffsetDateTime dataNomeacao;
-
     private Processo processo;
 }

@@ -11,11 +11,11 @@ import java.util.List;
 public class LaudoPericialModel {
 
     private String objetivo;
-    private List<ObjetoLaudoModel> objeto;
+    private List<ObjetoLaudoModel> objetos;
     private String metodologiaAplicada;
     private ExameDaMateriaModel exameDaMateria;
     private String historico;
-    private List<QuesitoModel> quesito;
+    private List<QuesitoModel> quesitos;
     private String conclusao;
     private String introducao;
     private OffsetDateTime dataDoLaudo;

@@ -1,9 +1,16 @@
 package com.sglp.sglp_api.domain.model;
 
-public abstract class Pessoa {
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-    private String nome;
-    private String cpf;
+import java.io.Serializable;
 
-    private DadosPerito dadosPerito;
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public abstract class Pessoa implements Serializable {
+
+    String nome;
+    String cpf;
 }
