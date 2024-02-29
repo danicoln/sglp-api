@@ -1,4 +1,4 @@
-package com.sglp.api.domain.model;
+package com.sglp.sglp_api.domain.model;
 
 public enum Parte {
 

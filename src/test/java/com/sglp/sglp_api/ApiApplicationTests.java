@@ -1,4 +1,4 @@
-package com.sglp.api;
+package com.sglp.sglp_api;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
