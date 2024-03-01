@@ -3,7 +3,6 @@ package com.sglp.sglp_api.api.disassembler;
 import com.sglp.sglp_api.api.dto.input.LaudoPericialInput;
 import com.sglp.sglp_api.domain.model.ExameDaMateria;
 import com.sglp.sglp_api.domain.model.LaudoPericial;
-import com.sglp.sglp_api.domain.model.ObjetoLaudo;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,7 +21,7 @@ public class LaudoPericialInputDisassembler {
 
     public void copyToDomainObject(LaudoPericialInput input, LaudoPericial laudoPericial) {
 
-        laudoPericial.setObjeto(new ArrayList<>());
+        laudoPericial.setObjetos(new ArrayList<>());
         laudoPericial.setExameDaMateria(new ExameDaMateria());
         laudoPericial.setQuesitos(new ArrayList<>());
 

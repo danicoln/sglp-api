@@ -1,7 +1,6 @@
 package com.sglp.sglp_api.domain.model;
 
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
