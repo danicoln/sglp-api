@@ -5,6 +5,7 @@ import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class LaudoPericial {
     @NotBlank
     private String objetivo;
     @NotBlank
-    private List<ObjetoLaudo> objeto;
+    private List<ObjetoLaudo> objetos;
     @NotBlank
     private String metodologiaAplicada;
     @NotBlank
@@ -33,5 +34,5 @@ public class LaudoPericial {
     private String conclusao;
     @NotBlank
     private String introducao;
-    private OffsetDateTime dataDoLaudo;
+    private LocalDateTime dataDoLaudo;
 }

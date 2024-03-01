@@ -13,13 +13,13 @@ public class LaudoPericialInput {
 
     @NotBlank
     private String objetivo;
-    private List<ObjetoLaudoInput> objeto;
+    private List<ObjetoLaudoInput> objetos;
     @NotBlank
     private String metodologiaAplicada;
     private ExameDaMateriaInput exameDaMateria;
     @NotBlank
     private String historico;
-    private List<QuesitoInput> quesito;
+    private List<QuesitoInput> quesitos;
     @NotBlank
     private String conclusao;
     @NotBlank

@@ -4,6 +4,7 @@ import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 
 @Data
@@ -16,6 +17,6 @@ public class Nomeacao {
     @Id
     @EqualsAndHashCode.Include
     private String id;
-    private OffsetDateTime dataNomeacao;
+    private LocalDateTime dataNomeacao;
     private Processo processo;
 }

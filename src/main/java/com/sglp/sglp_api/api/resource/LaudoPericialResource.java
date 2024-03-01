@@ -32,7 +32,7 @@ public class LaudoPericialResource {
     }
 
     @GetMapping("/{laudoId}")
-    public LaudoPericialModel buscar(@PathVariable Long laudoId) {
+    public LaudoPericialModel buscar(@PathVariable String laudoId) {
         LaudoPericial laudoPericial = laudoPericialService.buscarOuFalhar(laudoId);
 
         return laudoPericialModelAssembler.toModel(laudoPericial);
@@ -45,4 +45,15 @@ public class LaudoPericialResource {
         LaudoPericialModel laudoPericial = laudoPericialModelAssembler.toModel(laudoPericialService.salvar(laudo));
         return ResponseEntity.ok().body(laudoPericial);
     }
+
+    @PutMapping("/{laudoId}")
+    public LaudoPericialModel atualizar(@PathVariable String laudoId, @RequestBody LaudoPericialInput input) {
+
+        LaudoPericial laudoAtual = laudoPericialService.buscarOuFalhar(laudoId);
+        laudoPericialInputDisassembler.copyToDomainObject(input, laudoAtual);
+
+        return laudoPericialModelAssembler.toModel(laudoPericialService.salvar(laudoAtual));
+    }
+
+
 }

@@ -29,7 +29,7 @@ public class LaudoPericialService {
         return laudoPericialRepository.findAll();
     }
 
-    public LaudoPericial buscarOuFalhar(Long laudoId) {
+    public LaudoPericial buscarOuFalhar(String laudoId) {
         return laudoPericialRepository.findById(laudoId)
                 .orElseThrow(() -> new LaudoPericialNaoEncontradoException(laudoId));
     }
