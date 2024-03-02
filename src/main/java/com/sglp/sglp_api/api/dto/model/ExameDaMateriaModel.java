@@ -9,7 +9,7 @@ import java.util.List;
 @Setter
 public class ExameDaMateriaModel {
 
-    private Long id;
+    private String id;
     private List<ObjetoLaudoModel> objetos;
     private String descricao;
 }
