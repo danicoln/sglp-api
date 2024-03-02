@@ -9,6 +9,6 @@ import java.util.List;
 @Setter
 public class ObjetoLaudo {
 
-    private Long id;
+    private String id;
     private List<Documento> documentos;
 }

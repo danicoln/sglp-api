@@ -1,4 +1,4 @@
-package com.sglp.sglp_api.api.resource;
+package com.sglp.sglp_api.domain.service;
 
 import com.sglp.sglp_api.domain.exception.NomeacaoNaoEncontradaException;
 import com.sglp.sglp_api.domain.model.Nomeacao;

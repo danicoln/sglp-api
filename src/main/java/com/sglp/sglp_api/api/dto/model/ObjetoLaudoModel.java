@@ -9,6 +9,6 @@ import java.util.List;
 @Setter
 public class ObjetoLaudoModel {
 
-    private Long id;
+    private String id;
     private List<DocumentoModel> documentos;
 }
