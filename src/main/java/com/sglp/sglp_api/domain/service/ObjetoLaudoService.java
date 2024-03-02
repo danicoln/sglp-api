@@ -22,9 +22,9 @@ public class ObjetoLaudoService {
         return objetoLaudoRepository.findAll();
     }
 
-    public ObjetoLaudo buscar(String objetoId){
+    public ObjetoLaudo buscar(String objetoId) {
         Optional<ObjetoLaudo> obj = objetoLaudoRepository.findById(objetoId);
-        if(obj.get().getId().equals(objetoId)){
+        if (obj.get().getId().equals(objetoId)) {
             return obj.get();
         }
         return null;
@@ -41,7 +41,7 @@ public class ObjetoLaudoService {
 
         List<Documento> listaDeDocumentos = new ArrayList<>();
 
-        for(Documento novoDocumento : listaDeDocumentos){
+        for (Documento novoDocumento : listaDeDocumentos) {
             listaDeDocumentos.add(novoDocumento);
         }
 

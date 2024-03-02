@@ -10,7 +10,7 @@ import java.util.List;
 @Setter
 public class ExameDaMateria {
 
-    private Long id;
+    private String id;
     private List<ObjetoLaudo> objetos;
     private String descricao;
 }
