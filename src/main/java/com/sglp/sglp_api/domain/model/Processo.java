@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
@@ -13,6 +14,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "processos")
 public class Processo {
 
+    @Id
+    @EqualsAndHashCode.Include
     private String id;
     private String numero;
     private String comarca;
