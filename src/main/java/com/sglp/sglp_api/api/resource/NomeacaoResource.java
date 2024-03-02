@@ -5,6 +5,7 @@ import com.sglp.sglp_api.api.disassembler.NomeacaoInputDisassembler;
 import com.sglp.sglp_api.api.dto.input.NomeacaoInput;
 import com.sglp.sglp_api.api.dto.model.NomeacaoModel;
 import com.sglp.sglp_api.domain.model.Nomeacao;
+import com.sglp.sglp_api.domain.service.NomeacaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
