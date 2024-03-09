@@ -5,7 +5,6 @@ import com.sglp.sglp_api.api.disassembler.ExameDaMateriaInputDisassembler;
 import com.sglp.sglp_api.api.dto.input.ExameDaMateriaInput;
 import com.sglp.sglp_api.api.dto.model.ExameDaMateriaModel;
 import com.sglp.sglp_api.domain.model.ExameDaMateria;
-import com.sglp.sglp_api.domain.model.ObjetoLaudo;
 import com.sglp.sglp_api.domain.service.ExameDaMateriaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

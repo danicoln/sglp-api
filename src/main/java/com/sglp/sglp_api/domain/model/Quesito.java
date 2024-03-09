@@ -1,6 +1,5 @@
 package com.sglp.sglp_api.domain.model;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,7 +7,8 @@ import lombok.Setter;
 @Setter
 public class Quesito {
 
-    private Long id;
+    private String id;
     private Parte parte;
     private String quesito;
+    private String resposta;
 }
