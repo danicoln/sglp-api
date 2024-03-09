@@ -8,7 +8,8 @@ import lombok.Setter;
 @Setter
 public class QuesitoModel {
 
-    private Long id;
+    private String id;
     private Parte parte;
     private String quesito;
+    private String resposta;
 }

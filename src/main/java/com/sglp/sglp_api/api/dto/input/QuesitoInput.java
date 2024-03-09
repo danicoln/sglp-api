@@ -10,4 +10,5 @@ public class QuesitoInput {
 
     private Parte parte;
     private String quesito;
+    private String resposta;
 }
