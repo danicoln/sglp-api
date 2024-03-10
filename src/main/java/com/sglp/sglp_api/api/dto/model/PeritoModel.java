@@ -11,7 +11,7 @@ public class PeritoModel {
 
     private String id;
     private String nome;
-    private List<NomeacaoModel> nomeacoes;
-    private List<LaudoPericialModel> laudosPericiais;
+    private List<NomeacaoResumoModel> nomeacoes;
+    private List<LaudoPericialResumoModel> laudosPericiais;
 
 }
