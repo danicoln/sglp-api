@@ -31,7 +31,7 @@ public class ObjetoLaudoResource {
     }
 
     @GetMapping("/{objetoId}")
-    public ResponseEntity<ObjetoLaudoModel> buscar(@PathVariable String objetoId) {
+    public ResponseEntity<?> buscar(@PathVariable String objetoId) {
         ObjetoLaudo objetoLaudo = objetoLaudoService.buscar(objetoId);
         if(objetoLaudo != null) {
             ObjetoLaudoModel model = objetoLaudoModelAssembler.toModel(objetoLaudo);

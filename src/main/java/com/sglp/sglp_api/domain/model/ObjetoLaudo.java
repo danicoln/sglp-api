@@ -1,14 +1,20 @@
 package com.sglp.sglp_api.domain.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode
+@Document(collection = "objetos")
 public class ObjetoLaudo {
 
+    @Id
+    @EqualsAndHashCode.Include
     private String id;
     private List<Documento> documentos;
 }
