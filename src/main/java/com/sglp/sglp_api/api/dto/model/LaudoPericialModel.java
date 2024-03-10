@@ -10,6 +10,7 @@ import java.util.List;
 @Setter
 public class LaudoPericialModel {
 
+    private String id;
     private String objetivo;
     private List<ObjetoLaudoModel> objetos;
     private String metodologiaAplicada;
