@@ -24,7 +24,7 @@ public class ObjetoLaudoService {
 
     public ObjetoLaudo buscar(String objetoId) {
         Optional<ObjetoLaudo> obj = objetoLaudoRepository.findById(objetoId);
-        if (obj.get().getId().equals(objetoId)) {
+        if (obj.isPresent()) {
             return obj.get();
         }
         return null;
