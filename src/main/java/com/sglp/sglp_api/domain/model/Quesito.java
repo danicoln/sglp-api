@@ -1,12 +1,18 @@
 package com.sglp.sglp_api.domain.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode
+@Document(collection = "quesitos")
 public class Quesito {
 
+    @Id
+    @EqualsAndHashCode.Include
     private String id;
     private Parte parte;
     private String quesito;
