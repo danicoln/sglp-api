@@ -54,4 +54,13 @@ public class QuesitoResource {
 
         return quesitoModelAssembler.toModel(quesito);
     }
+
+    @PatchMapping("/{quesitoId}")
+    public QuesitoModel inserirResposta(@PathVariable String quesitoId, @RequestBody QuesitoInput input) {
+        Quesito quesitoAtual = quesitoService.buscarOuFalhar(quesitoId);
+
+        quesitoAtual.setResposta(input.getResposta());
+
+        return quesitoModelAssembler.toModel(quesitoService.salvar(quesitoAtual));
+    }
 }
