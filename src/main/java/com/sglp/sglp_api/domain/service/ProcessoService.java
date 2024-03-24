@@ -5,6 +5,7 @@ import com.sglp.sglp_api.domain.model.Processo;
 import com.sglp.sglp_api.domain.repository.ProcessoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +16,7 @@ public class ProcessoService {
     @Autowired
     private ProcessoRepository processoRepository;
 
+    @Transactional
     public Processo salvar(Processo processo) {
         return processoRepository.save(processo);
     }
