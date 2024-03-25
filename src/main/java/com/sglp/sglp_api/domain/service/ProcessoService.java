@@ -27,9 +27,9 @@ public class ProcessoService {
     }
 
     public Processo buscar(String processoId) {
-        Optional<Processo> processos = processoRepository.findById(processoId);
-        if(processos.get().getId().equals(processoId)) {
-            return processos.get();
+        Optional<Processo> processoOptional = processoRepository.findById(processoId);
+        if(processoOptional.isPresent()) {
+            return processoOptional.get();
         }
         return null;
     }
@@ -37,5 +37,9 @@ public class ProcessoService {
     public Processo buscarOuFalhar(String processoId) {
         return processoRepository.findById(processoId)
                 .orElseThrow(() -> new ProcessoNaoEcontradoException(processoId));
+    }
+
+    public void remover(String processoId) {
+        processoRepository.deleteById(processoId);
     }
 }

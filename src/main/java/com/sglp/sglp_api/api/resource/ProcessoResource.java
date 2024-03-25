@@ -48,7 +48,7 @@ public class ProcessoResource {
         return ResponseEntity.ok().body(model);
     }
 
-    @PostMapping("/{processoId}")
+    @PutMapping("/{processoId}")
     public ProcessoModel atualizar(@PathVariable String processoId,
                                    @RequestBody ProcessoInput input) {
         Processo processoAtual = processoService.buscarOuFalhar(processoId);
@@ -57,5 +57,15 @@ public class ProcessoResource {
         Processo processo = processoService.salvar(processoAtual);
 
         return processoModelAssembler.toModel(processo);
+    }
+
+    @DeleteMapping("/{processoId}")
+    public ResponseEntity<ProcessoModel> remover(@PathVariable String processoId) {
+        Processo processo = processoService.buscarOuFalhar(processoId);
+        if (processo.getId().equals(processoId)) {
+            processoService.remover(processoId);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 }
