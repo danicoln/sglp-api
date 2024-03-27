@@ -21,4 +21,7 @@ public class Nomeacao {
     private String id;
     private LocalDateTime dataNomeacao;
     private Processo processo;
+    private String aceite;
+    private LocalDateTime dataAceite;
+    private LocalDateTime prazo;
 }

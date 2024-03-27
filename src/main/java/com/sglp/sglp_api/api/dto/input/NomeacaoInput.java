@@ -11,4 +11,7 @@ public class NomeacaoInput {
 
     private LocalDateTime dataNomeacao;
     private ProcessoInput processo;
+    private String aceite;
+    private LocalDateTime dataAceite;
+    private LocalDateTime prazo;
 }

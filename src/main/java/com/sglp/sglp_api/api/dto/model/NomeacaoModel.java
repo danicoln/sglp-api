@@ -12,4 +12,7 @@ public class NomeacaoModel {
     private String id;
     private ProcessoModel processo;
     private LocalDateTime dataNomeacao;
+    private String aceite;
+    private LocalDateTime dataAceite;
+    private LocalDateTime prazo;
 }
