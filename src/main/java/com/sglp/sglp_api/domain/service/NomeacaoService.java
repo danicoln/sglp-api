@@ -38,4 +38,8 @@ public class NomeacaoService {
 
         return nomeacaoRepository.save(nomeacao);
     }
+
+    public void remover(String nomeacaoId) {
+        nomeacaoRepository.deleteById(nomeacaoId);
+    }
 }

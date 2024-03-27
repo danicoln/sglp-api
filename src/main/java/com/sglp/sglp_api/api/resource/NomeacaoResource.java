@@ -44,4 +44,25 @@ public class NomeacaoResource {
 
         return ResponseEntity.ok().body(model);
     }
+
+    @PutMapping("/{nomeacaoId}")
+    public NomeacaoModel atualizar(@PathVariable String nomeacaoId,
+                                   @RequestBody NomeacaoInput input){
+        Nomeacao nomeacaoAtual = nomeacaoService.buscarOuFalhar(nomeacaoId);
+        nomeacaoInputDisassembler.copyToDomainObject(input, nomeacaoAtual);
+        Nomeacao nomeacao = nomeacaoService.salvar(nomeacaoAtual);
+
+        return nomeacaoModelAssembler.toModel(nomeacao);
+    }
+
+    @DeleteMapping("/{nomeacaoId}")
+    public ResponseEntity<NomeacaoModel> remover(@PathVariable String nomeacaoId) {
+        Nomeacao nomeacao = nomeacaoService.buscarOuFalhar(nomeacaoId);
+        if(nomeacao.getId().equals(nomeacaoId)) {
+            nomeacaoService.remover(nomeacaoId);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+
 }
