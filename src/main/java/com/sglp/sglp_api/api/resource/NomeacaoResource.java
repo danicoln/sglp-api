@@ -5,7 +5,9 @@ import com.sglp.sglp_api.api.disassembler.NomeacaoInputDisassembler;
 import com.sglp.sglp_api.api.dto.input.NomeacaoInput;
 import com.sglp.sglp_api.api.dto.model.NomeacaoModel;
 import com.sglp.sglp_api.domain.model.Nomeacao;
+import com.sglp.sglp_api.domain.model.Processo;
 import com.sglp.sglp_api.domain.service.NomeacaoService;
+import com.sglp.sglp_api.domain.service.ProcessoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +20,9 @@ public class NomeacaoResource {
 
     @Autowired
     private NomeacaoService nomeacaoService;
+
+    @Autowired
+    private ProcessoService processoService;
 
     @Autowired
     private NomeacaoModelAssembler nomeacaoModelAssembler;
@@ -39,6 +44,7 @@ public class NomeacaoResource {
 
     @PostMapping
     public ResponseEntity<NomeacaoModel> salvar(@RequestBody NomeacaoInput input) {
+
         Nomeacao nomeacao = nomeacaoInputDisassembler.toDomainObject(input);
         NomeacaoModel model = nomeacaoModelAssembler.toModel(nomeacaoService.salvar(nomeacao));
 

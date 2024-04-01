@@ -7,6 +7,7 @@ import lombok.Setter;
 @Setter
 public class ProcessoInput {
 
+    private String id;
     private String numero;
     private String comarca;
     private String vara;
