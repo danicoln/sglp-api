@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @Setter
 public class NomeacaoInput {
 
+    private String id;
     private LocalDateTime dataNomeacao;
     private ProcessoInput processo;
     private String aceite;

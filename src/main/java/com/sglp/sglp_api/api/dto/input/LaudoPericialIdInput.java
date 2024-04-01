@@ -1,4 +1,4 @@
-package com.sglp.sglp_api.api.dto.model;
+package com.sglp.sglp_api.api.dto.input;
 
 import lombok.Getter;
 import lombok.Setter;
