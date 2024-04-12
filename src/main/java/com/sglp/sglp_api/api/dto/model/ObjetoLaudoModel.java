@@ -10,5 +10,5 @@ import java.util.List;
 public class ObjetoLaudoModel {
 
     private String id;
-    private List<DocumentoModel> documentos;
+    private DocumentoModel documento;
 }

@@ -41,7 +41,8 @@ public class ExameDaMateriaService {
         if (exameDaMateria != null && exameDaMateria.getObjetos() != null) {
             for (ObjetoLaudo novoObjeto : exameDaMateria.getObjetos()) {
 
-                processarObjetoLaudo(novoObjeto);
+                exameDaMateria.getObjetos().add(novoObjeto);
+//                processarObjetoLaudo(novoObjeto);
             }
         }
         return exameDaMateriaRepository.save(exameDaMateria);
@@ -54,11 +55,11 @@ public class ExameDaMateriaService {
 
     private void processarObjetoLaudo(ObjetoLaudo novoObjeto) {
 
-        if (novoObjeto != null && novoObjeto.getDocumentos() != null) {
-            Iterator<Documento> iterator = novoObjeto.getDocumentos().iterator();
-
-            processarDocumento(iterator);
-        }
+//        if (novoObjeto != null && novoObjeto.getDocumento() != null) {
+//            Iterator<Documento> iterator = novoObjeto.getDocumentos().iterator();
+//
+//            processarDocumento(iterator);
+//        }
     }
 
     private void processarDocumento(Iterator<Documento> iterator) {

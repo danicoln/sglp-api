@@ -18,6 +18,9 @@ public class ObjetoLaudoService {
     @Autowired
     private ObjetoLaudoRepository objetoLaudoRepository;
 
+    @Autowired
+    private DocumentoService documentoService;
+
     public List<ObjetoLaudo> listar() {
         return objetoLaudoRepository.findAll();
     }
@@ -37,13 +40,9 @@ public class ObjetoLaudoService {
 
     @Transactional
     public ObjetoLaudo salvar(ObjetoLaudo objetoLaudo) {
-        //TODO: implementar a busca dos objetos que compoem a ObjetoLaudo
 
-        List<Documento> listaDeDocumentos = new ArrayList<>();
-
-        for (Documento novoDocumento : listaDeDocumentos) {
-            listaDeDocumentos.add(novoDocumento);
-        }
+        Documento documento = objetoLaudo.getDocumento();
+        this.documentoService.salvar(documento);
 
         return objetoLaudoRepository.save(objetoLaudo);
     }

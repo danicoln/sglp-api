@@ -9,5 +9,7 @@ import java.util.List;
 @Setter
 public class ObjetoLaudoInput {
 
-    private List<DocumentoInput> documentos;
+    private String id;
+    private DocumentoInput documento;
+
 }
