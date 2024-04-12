@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @Setter
 public class DocumentoInput {
 
+    private String id;
     private String nomeTitulo;
     private String descricao;
     private LocalDateTime data;

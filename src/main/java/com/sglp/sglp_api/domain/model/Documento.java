@@ -13,10 +13,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-@Document
+@Document(collection = "documentos")
 public class Documento {
 
     @Id
+    @EqualsAndHashCode.Include
     private String id;
     private String nomeTitulo;
     private String descricao;

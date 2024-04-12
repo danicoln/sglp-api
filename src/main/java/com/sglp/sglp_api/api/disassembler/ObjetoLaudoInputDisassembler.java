@@ -19,7 +19,6 @@ public class ObjetoLaudoInputDisassembler {
     }
 
     public void copyToDomainObject(ObjetoLaudoInput input, ObjetoLaudo objeto) {
-        objeto.setDocumentos(new ArrayList<>());
         modelMapper.map(input, objeto);
     }
 }
