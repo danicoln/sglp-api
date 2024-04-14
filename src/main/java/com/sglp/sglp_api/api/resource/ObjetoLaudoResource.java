@@ -59,4 +59,13 @@ public class ObjetoLaudoResource {
 
         return objetoLaudoModelAssembler.toModel(objeto);
     }
+    @DeleteMapping("/{objetoId}")
+    public ResponseEntity<ObjetoLaudo> remover(@PathVariable String objetoId) {
+        ObjetoLaudo objeto = objetoLaudoService.buscarOuFalhar(objetoId);
+        if(objeto.getId().equals(objetoId)) {
+            objetoLaudoService.remover(objetoId);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
 }
