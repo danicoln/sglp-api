@@ -46,4 +46,8 @@ public class ObjetoLaudoService {
 
         return objetoLaudoRepository.save(objetoLaudo);
     }
+
+    public void remover(String objetoId) {
+        objetoLaudoRepository.deleteById(objetoId);
+    }
 }
