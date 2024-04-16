@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -37,13 +38,12 @@ public class ExameDaMateriaService {
 
     @Transactional
     public ExameDaMateria salvar(ExameDaMateria exameDaMateria) {
-
         if (exameDaMateria != null && exameDaMateria.getObjetos() != null) {
+            List<ObjetoLaudo> novosObjetos = new ArrayList<>();
             for (ObjetoLaudo novoObjeto : exameDaMateria.getObjetos()) {
-
-                exameDaMateria.getObjetos().add(novoObjeto);
-//                processarObjetoLaudo(novoObjeto);
+                novosObjetos.add(novoObjeto);
             }
+            exameDaMateria.getObjetos().addAll(novosObjetos);
         }
         return exameDaMateriaRepository.save(exameDaMateria);
     }
@@ -53,14 +53,7 @@ public class ExameDaMateriaService {
                 .orElseThrow(() -> new ExameDaMateriaNaoEncontradoException(exameId));
     }
 
-    private void processarObjetoLaudo(ObjetoLaudo novoObjeto) {
 
-//        if (novoObjeto != null && novoObjeto.getDocumento() != null) {
-//            Iterator<Documento> iterator = novoObjeto.getDocumentos().iterator();
-//
-//            processarDocumento(iterator);
-//        }
-    }
 
     private void processarDocumento(Iterator<Documento> iterator) {
 
@@ -68,5 +61,9 @@ public class ExameDaMateriaService {
             Documento documento = iterator.next();
             documentoService.salvar(documento);
         }
+    }
+
+    public void remover(String exameId) {
+        exameDaMateriaRepository.deleteById(exameId);
     }
 }

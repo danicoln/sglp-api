@@ -59,4 +59,14 @@ public class ExameDaMateriaResource {
 
         return exameDaMateriaModelAssembler.toModel(exame);
     }
+
+    @DeleteMapping("/{exameId}")
+    public ResponseEntity<ExameDaMateria> remover(@PathVariable String exameId) {
+        ExameDaMateria exame = exameDaMateriaService.buscarOuFalhar(exameId);
+        if(exame.getId().equals(exameId)) {
+            exameDaMateriaService.remover(exameId);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
 }
