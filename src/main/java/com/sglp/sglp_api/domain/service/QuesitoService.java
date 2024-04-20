@@ -39,4 +39,8 @@ public class QuesitoService {
         return quesitoRepository.findById(quesitoId)
                 .orElseThrow(() -> new QuesitoNaoEncontradoException(quesitoId));
     }
+
+    public void remover(String quesitoId) {
+        quesitoRepository.deleteById(quesitoId);
+    }
 }
