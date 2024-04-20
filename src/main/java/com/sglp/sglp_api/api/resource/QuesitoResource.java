@@ -4,6 +4,7 @@ import com.sglp.sglp_api.api.assembler.QuesitoModelAssembler;
 import com.sglp.sglp_api.api.disassembler.QuesitoInputDisassembler;
 import com.sglp.sglp_api.api.dto.input.QuesitoInput;
 import com.sglp.sglp_api.api.dto.model.QuesitoModel;
+import com.sglp.sglp_api.domain.model.ObjetoLaudo;
 import com.sglp.sglp_api.domain.model.Quesito;
 import com.sglp.sglp_api.domain.service.QuesitoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,6 +54,16 @@ public class QuesitoResource {
         Quesito quesito = quesitoService.salvar(quesitoAtual);
 
         return quesitoModelAssembler.toModel(quesito);
+    }
+
+    @DeleteMapping("/{quesitoId}")
+    public ResponseEntity<Quesito> remover(@PathVariable String quesitoId) {
+        Quesito quesito = quesitoService.buscarOuFalhar(quesitoId);
+        if(quesito.getId().equals(quesitoId)) {
+            quesitoService.remover(quesitoId);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @PatchMapping("/{quesitoId}")
