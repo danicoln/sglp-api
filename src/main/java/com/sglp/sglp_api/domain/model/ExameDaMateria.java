@@ -1,15 +1,24 @@
 package com.sglp.sglp_api.domain.model;
 
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode
+@Document(collection = "exames")
 public class ExameDaMateria {
 
+    @Id
+    @EqualsAndHashCode.Include
     private String id;
     private List<ObjetoLaudo> objetos;
     private String descricao;

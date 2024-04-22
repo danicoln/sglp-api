@@ -40,11 +40,14 @@ public class ObjetoLaudoService {
 
     @Transactional
     public ObjetoLaudo salvar(ObjetoLaudo objetoLaudo) {
-
         Documento documento = objetoLaudo.getDocumento();
-        this.documentoService.salvar(documento);
-
+        this.salvarDocumento(documento);
         return objetoLaudoRepository.save(objetoLaudo);
+    }
+
+    @Transactional
+    private Documento salvarDocumento(Documento documento) {
+        return documentoService.salvar(documento);
     }
 
     public void remover(String objetoId) {

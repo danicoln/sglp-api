@@ -10,6 +10,7 @@ import java.util.List;
 public class ObjetoLaudoInput {
 
     private String id;
+    private String exameDaMateriaId;
     private DocumentoInput documento;
 
 }

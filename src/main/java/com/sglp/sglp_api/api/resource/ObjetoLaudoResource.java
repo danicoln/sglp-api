@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/objetos")
+@RequestMapping("/api/exames/{exameId}/objetos")
 public class ObjetoLaudoResource {
 
     @Autowired
@@ -41,8 +41,10 @@ public class ObjetoLaudoResource {
     }
 
     @PostMapping
-    public ResponseEntity<ObjetoLaudoModel> salvar(@RequestBody ObjetoLaudoInput input) {
+    public ResponseEntity<ObjetoLaudoModel> salvar(@PathVariable String exameId, @RequestBody ObjetoLaudoInput input) {
         ObjetoLaudo objetoLaudo = objetoLaudoInputDisassembler.toDomainObject(input);
+
+        objetoLaudo.setExameDaMateriaId(exameId);
         ObjetoLaudoModel model =
                 objetoLaudoModelAssembler.toModel(objetoLaudoService.salvar(objetoLaudo));
 
@@ -50,9 +52,10 @@ public class ObjetoLaudoResource {
     }
 
     @PutMapping("/{objetoId}")
-    public ObjetoLaudoModel atualizar(@PathVariable String objetoId,
+    public ObjetoLaudoModel atualizar(@PathVariable String exameId, @PathVariable String objetoId,
                                       @RequestBody ObjetoLaudoInput input) {
         ObjetoLaudo objetoLaudoAtual = objetoLaudoService.buscarOuFalhar(objetoId);
+        objetoLaudoAtual.setExameDaMateriaId(exameId);
         objetoLaudoInputDisassembler.copyToDomainObject(input, objetoLaudoAtual);
 
         ObjetoLaudo objeto = objetoLaudoService.salvar(objetoLaudoAtual);
@@ -60,7 +63,7 @@ public class ObjetoLaudoResource {
         return objetoLaudoModelAssembler.toModel(objeto);
     }
     @DeleteMapping("/{objetoId}")
-    public ResponseEntity<ObjetoLaudo> remover(@PathVariable String objetoId) {
+    public ResponseEntity<ObjetoLaudo> remover(@PathVariable String exameId, @PathVariable String objetoId) {
         ObjetoLaudo objeto = objetoLaudoService.buscarOuFalhar(objetoId);
         if(objeto.getId().equals(objetoId)) {
             objetoLaudoService.remover(objetoId);
