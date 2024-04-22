@@ -17,5 +17,6 @@ public class ObjetoLaudo {
     @Id
     @EqualsAndHashCode.Include
     private String id;
+    private String exameDaMateriaId;
     private Documento documento;
 }

@@ -9,6 +9,7 @@ import java.util.List;
 @Setter
 public class ExameDaMateriaInput {
 
+    private String id;
     private List<ObjetoLaudoInput> objetos;
     private String descricao;
 }

@@ -5,11 +5,13 @@ import com.sglp.sglp_api.api.disassembler.ExameDaMateriaInputDisassembler;
 import com.sglp.sglp_api.api.dto.input.ExameDaMateriaInput;
 import com.sglp.sglp_api.api.dto.model.ExameDaMateriaModel;
 import com.sglp.sglp_api.domain.model.ExameDaMateria;
+import com.sglp.sglp_api.domain.model.ObjetoLaudo;
 import com.sglp.sglp_api.domain.service.ExameDaMateriaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -44,6 +46,7 @@ public class ExameDaMateriaResource {
     @PostMapping
     public ResponseEntity<ExameDaMateriaModel> salvar(@RequestBody ExameDaMateriaInput input) {
         ExameDaMateria exameDaMateria = exameDaMateriaInputDisassembler.toDomainObject(input);
+
         ExameDaMateriaModel model =
                 exameDaMateriaModelAssembler.toModel(exameDaMateriaService.salvar(exameDaMateria));
         return ResponseEntity.ok().body(model);
