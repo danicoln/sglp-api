@@ -40,7 +40,7 @@ public class ExameDaMateriaService {
             objetoLaudoService.salvar(objeto);
         }
 
-        return exameDaMateriaRepository.save(exameDaMateria);
+        return exameDaMateriaRepository.save(exameSalvo);
     }
 
     public ExameDaMateria buscarOuFalhar(String exameId) {
