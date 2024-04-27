@@ -1,3 +1,7 @@
+<header>
+  <img src="https://github.com/danicoln/sglp-ui/tree/main/src/assets/capa.jpeg">
+</header>
+
 <h1>Sistema Gerenciador de Laudo Pericial</h1>
 
 <p>
