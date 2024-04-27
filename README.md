@@ -2,10 +2,8 @@
   <img src="https://github.com/danicoln/sglp-ui/blob/main/src/assets/capa.jpeg">
 </header>
 
-<h1>Sistema Gerenciador de Laudo Pericial</h1>
-
 <p>
-  O Sistema Gerenciador de Laudo Pericial é uma aplicação desenvolvida para auxiliar peritos na elaboração de laudos periciais com o uso de Inteligência Artificial. Este sistema oferece uma plataforma completa para gerenciar informações relacionadas a laudos periciais, processos, peritos e partes envolvidas.
+  O Sistema de Gerenciamento de Laudo Pericial é uma aplicação desenvolvida para auxiliar peritos na elaboração de laudos periciais com o uso de Inteligência Artificial. Este sistema oferece uma plataforma completa para gerenciar informações relacionadas a laudos periciais, processos, peritos e partes envolvidas.
 </p>
 <h2>
   Funcionalidades Principais  
