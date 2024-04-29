@@ -19,4 +19,9 @@ public class ObjetoLaudo {
     private String id;
     private String exameDaMateriaId;
     private Documento documento;
+
+    public void atualizarExame(ObjetoLaudo objetoLaudo) {
+        this.setExameDaMateriaId(objetoLaudo.exameDaMateriaId);
+        this.setDocumento(objetoLaudo.getDocumento());
+    }
 }

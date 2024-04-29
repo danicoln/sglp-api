@@ -8,18 +8,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ExameDaMateriaService {
 
-    @Autowired
-    private ExameDaMateriaRepository exameDaMateriaRepository;
+    private static final String EXAME_NAO_ENCONTRADO = "Exame com o ID %d não encontrado";
 
     @Autowired
-    private DocumentoService documentoService;
-    @Autowired
-    private ObjetoLaudoService objetoLaudoService;
+    private ExameDaMateriaRepository exameDaMateriaRepository;
 
     public List<ExameDaMateria> listar() {
         return exameDaMateriaRepository.findAll();
@@ -31,15 +30,15 @@ public class ExameDaMateriaService {
 
     @Transactional
     public ExameDaMateria salvar(ExameDaMateria exameDaMateria) {
-
+        if (exameDaMateria.getObjetos() == null) {
+            exameDaMateria.setObjetos(new ArrayList<>());
+        }
         ExameDaMateria exameSalvo = exameDaMateriaRepository.save(exameDaMateria);
         String exameId = exameSalvo.getId();
 
-        for(ObjetoLaudo objeto : exameDaMateria.getObjetos()) {
-            objeto.setExameDaMateriaId(exameId);
-            objetoLaudoService.salvar(objeto);
+        for (ObjetoLaudo obj : exameDaMateria.getObjetos()) {
+            obj.setExameDaMateriaId(exameId);
         }
-
         return exameDaMateriaRepository.save(exameSalvo);
     }
 
@@ -52,6 +51,37 @@ public class ExameDaMateriaService {
         exameDaMateriaRepository.deleteById(exameId);
     }
 
-    public void salvarObjetosDoExame(ExameDaMateria exameDaMateria) {
+    public Optional<ExameDaMateria> buscarPorId(String exameId) {
+        return exameDaMateriaRepository.findById(exameId);
+    }
+
+    @Transactional
+    public ExameDaMateria atualizar(String exameId, ExameDaMateria exame) {
+        ExameDaMateria exameExistente = validarExame(exameId);
+        exameExistente.setDescricao(exame.getDescricao());
+
+        List<ObjetoLaudo> objetosAtualizados = new ArrayList<>();
+        for (ObjetoLaudo objeto : exame.getObjetos()) {
+            ObjetoLaudo objetoExistente = exameExistente.getObjetos().stream()
+                    .filter(obj -> obj.getId().equals(objeto.getId()))
+                    .findFirst()
+                    .orElse(null);
+
+            if (objetoExistente != null) {
+                objetoExistente.atualizarExame(objeto);
+                objetosAtualizados.add(objetoExistente);
+            } else {
+                objeto.setExameDaMateriaId(exameId);
+                objetosAtualizados.add(objeto);
+            }
+        }
+        exameExistente.setObjetos(objetosAtualizados);
+
+        return salvar(exameExistente);
+    }
+
+    private ExameDaMateria validarExame(String exameId) {
+        return this.buscarPorId(exameId)
+                .orElseThrow(() -> new ExameDaMateriaNaoEncontradoException(EXAME_NAO_ENCONTRADO, exameId));
     }
 }
