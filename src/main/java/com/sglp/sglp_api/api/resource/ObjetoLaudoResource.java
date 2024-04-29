@@ -1,74 +1,79 @@
 package com.sglp.sglp_api.api.resource;
 
-import com.sglp.sglp_api.api.assembler.ObjetoLaudoModelAssembler;
-import com.sglp.sglp_api.api.disassembler.ObjetoLaudoInputDisassembler;
 import com.sglp.sglp_api.api.dto.input.ObjetoLaudoInput;
 import com.sglp.sglp_api.api.dto.model.ObjetoLaudoModel;
+import com.sglp.sglp_api.api.mapper.ObjetoLaudoMapper;
+import com.sglp.sglp_api.domain.model.ExameDaMateria;
 import com.sglp.sglp_api.domain.model.ObjetoLaudo;
 import com.sglp.sglp_api.domain.service.ObjetoLaudoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/exames/{exameId}/objetos")
 public class ObjetoLaudoResource {
 
     @Autowired
-    private ObjetoLaudoService objetoLaudoService;
+    private ObjetoLaudoService service;
 
     @Autowired
-    private ObjetoLaudoModelAssembler objetoLaudoModelAssembler;
+    private ObjetoLaudoMapper mapper;
 
-    @Autowired
-    private ObjetoLaudoInputDisassembler objetoLaudoInputDisassembler;
+    @PostMapping
+    public ResponseEntity<ObjetoLaudoModel> salvar(@PathVariable String exameId,
+                                                   @RequestBody ObjetoLaudoInput input) {
+
+        ObjetoLaudo objetoLaudo = mapper.toEntity(input);
+        ObjetoLaudo objSalvo = service.salvar(exameId, objetoLaudo);
+        ObjetoLaudoModel model = mapper.toModel(objSalvo);
+        return ResponseEntity.status(HttpStatus.CREATED).body(model);
+    }
 
     @GetMapping
-    public List<ObjetoLaudoModel> listar() {
-        return objetoLaudoModelAssembler.toCollectionModel(objetoLaudoService.listar());
+    public ResponseEntity<List<ObjetoLaudoModel>> listar(@PathVariable String exameId) {
+        Optional<ExameDaMateria> exameDaMateria = service.buscarExame(exameId);
+
+        if (exameDaMateria.isEmpty() || exameDaMateria == null) {
+            return ResponseEntity.notFound().build();
+        }
+        List<ObjetoLaudo> objetos = service.listar();
+        List<ObjetoLaudoModel> models = mapper.toModelList(objetos);
+        return ResponseEntity.ok(models);
     }
 
     @GetMapping("/{objetoId}")
-    public ResponseEntity<?> buscar(@PathVariable String objetoId) {
-        ObjetoLaudo objetoLaudo = objetoLaudoService.buscar(objetoId);
-        if(objetoLaudo != null) {
-            ObjetoLaudoModel model = objetoLaudoModelAssembler.toModel(objetoLaudo);
-            return ResponseEntity.ok(model);
-        }
-        return ResponseEntity.notFound().build();
-    }
-
-    @PostMapping
-    public ResponseEntity<ObjetoLaudoModel> salvar(@PathVariable String exameId, @RequestBody ObjetoLaudoInput input) {
-        ObjetoLaudo objetoLaudo = objetoLaudoInputDisassembler.toDomainObject(input);
-
-        objetoLaudo.setExameDaMateriaId(exameId);
-        ObjetoLaudoModel model =
-                objetoLaudoModelAssembler.toModel(objetoLaudoService.salvar(objetoLaudo));
-
-        return ResponseEntity.ok().body(model);
+    public ResponseEntity<?> buscarPorId(@PathVariable String exameId,
+                                         @PathVariable String objetoId) {
+        final var objetoLaudo = service.buscarPorId(exameId, objetoId);
+        return ResponseEntity.ok(mapper.toModel(objetoLaudo));
     }
 
     @PutMapping("/{objetoId}")
-    public ObjetoLaudoModel atualizar(@PathVariable String exameId, @PathVariable String objetoId,
-                                      @RequestBody ObjetoLaudoInput input) {
-        ObjetoLaudo objetoLaudoAtual = objetoLaudoService.buscarOuFalhar(objetoId);
-        objetoLaudoAtual.setExameDaMateriaId(exameId);
-        objetoLaudoInputDisassembler.copyToDomainObject(input, objetoLaudoAtual);
-
-        ObjetoLaudo objeto = objetoLaudoService.salvar(objetoLaudoAtual);
-
-        return objetoLaudoModelAssembler.toModel(objeto);
+    public ResponseEntity<ObjetoLaudoModel> atualizar(@PathVariable String exameId, @PathVariable String objetoId,
+                                                      @RequestBody ObjetoLaudoInput input) {
+        ObjetoLaudo objetoLaudo = mapper.toEntity(input);
+        ObjetoLaudo objSalvo = service.atualizar(exameId, objetoId, objetoLaudo);
+        ObjetoLaudoModel model = mapper.toModel(objSalvo);
+        return ResponseEntity.ok(model);
     }
+
     @DeleteMapping("/{objetoId}")
-    public ResponseEntity<ObjetoLaudo> remover(@PathVariable String exameId, @PathVariable String objetoId) {
-        ObjetoLaudo objeto = objetoLaudoService.buscarOuFalhar(objetoId);
-        if(objeto.getId().equals(objetoId)) {
-            objetoLaudoService.remover(objetoId);
-            return ResponseEntity.noContent().build();
+    public ResponseEntity<?> remover(@PathVariable String exameId, @PathVariable String objetoId) {
+        Optional<ExameDaMateria> exameDaMateria = service.buscarExame(exameId);
+
+        if (exameDaMateria.isEmpty()) {
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.notFound().build();
+        ObjetoLaudo objetoLaudo = service.buscarPorId(exameId, objetoId);
+        if (objetoLaudo == null) {
+            return ResponseEntity.notFound().build();
+        }
+        service.remover(objetoId);
+        return ResponseEntity.noContent().build();
     }
 }
