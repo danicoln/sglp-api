@@ -41,10 +41,18 @@ public class ObjetoLaudoService {
     @Transactional
     public ObjetoLaudo salvar(ObjetoLaudo objetoLaudo) {
 
+<<<<<<< Updated upstream
         Documento documento = objetoLaudo.getDocumento();
         this.documentoService.salvar(documento);
 
         return objetoLaudoRepository.save(objetoLaudo);
+=======
+        ObjetoLaudo objetoSalvo = objetoLaudoRepository.save(objetoLaudo);
+
+        Documento documento = this.documentoService.salvar(objetoSalvo.getDocumento());
+
+        return this.objetoLaudoRepository.save(objetoLaudo);
+>>>>>>> Stashed changes
     }
 
     public void remover(String objetoId) {
