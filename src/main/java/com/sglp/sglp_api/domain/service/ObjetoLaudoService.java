@@ -50,18 +50,12 @@ public class ObjetoLaudoService {
     public ObjetoLaudo salvar(String exameId, ObjetoLaudo objetoLaudo) {
         ExameDaMateria exame = exameDaMateriaService.buscarOuFalhar(exameId);
         objetoLaudo.setExameDaMateriaId(exame.getId());
-
-<<<<<<< Updated upstream
-        Documento documento = objetoLaudo.getDocumento();
-        this.salvarDocumento(documento);
-        return objetoLaudoRepository.save(objetoLaudo);
-=======
+        
         ObjetoLaudo objetoSalvo = objetoLaudoRepository.save(objetoLaudo);
 
         Documento documento = this.documentoService.salvar(objetoSalvo.getDocumento());
 
         return this.objetoLaudoRepository.save(objetoLaudo);
->>>>>>> Stashed changes
     }
 
     @Transactional
