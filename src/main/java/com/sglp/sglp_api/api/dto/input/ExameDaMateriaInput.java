@@ -10,6 +10,6 @@ import java.util.List;
 public class ExameDaMateriaInput {
 
     private String id;
-    private List<ObjetoLaudoInput> objetos;
+    private List<String> objetosIds;
     private String descricao;
 }

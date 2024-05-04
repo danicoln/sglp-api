@@ -36,12 +36,16 @@ public class ObjetoLaudoResource {
 
     @GetMapping
     public ResponseEntity<List<ObjetoLaudoModel>> listar(@PathVariable String exameId) {
-        Optional<ExameDaMateria> exameDaMateria = service.buscarExame(exameId);
-
-        if (exameDaMateria.isEmpty() || exameDaMateria == null) {
+//        Optional<ExameDaMateria> exameOpt = service.buscarExame(exameId);
+//
+//        if (exameOpt.isEmpty() || exameOpt == null) {
+//        }
+//        ExameDaMateria exame = exameOpt.get();
+        List<ObjetoLaudo> objetos = service.listar(exameId);
+        if(objetos == null || objetos.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        List<ObjetoLaudo> objetos = service.listar();
+
         List<ObjetoLaudoModel> models = mapper.toModelList(objetos);
         return ResponseEntity.ok(models);
     }

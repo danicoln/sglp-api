@@ -20,6 +20,6 @@ public class ExameDaMateria {
     @Id
     @EqualsAndHashCode.Include
     private String id;
-    private List<ObjetoLaudo> objetos;
+    private List<String> objetosIds;
     private String descricao;
 }
