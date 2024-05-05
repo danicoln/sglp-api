@@ -1,9 +1,11 @@
 package com.sglp.sglp_api.domain.service;
 
 import com.sglp.sglp_api.domain.exception.ExameDaMateriaNaoEncontradoException;
+import com.sglp.sglp_api.domain.exception.ObjetoLaudoNaoEncontradoException;
 import com.sglp.sglp_api.domain.model.ExameDaMateria;
 import com.sglp.sglp_api.domain.model.ObjetoLaudo;
 import com.sglp.sglp_api.domain.repository.ExameDaMateriaRepository;
+import com.sglp.sglp_api.domain.repository.ObjetoLaudoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,9 +18,13 @@ import java.util.Optional;
 public class ExameDaMateriaService {
 
     private static final String EXAME_NAO_ENCONTRADO = "Exame com o ID %d não encontrado";
+    private static final String OBJETO_NAO_ENCONTRADO = "Objeto com o ID %d não encontrado";
 
     @Autowired
     private ExameDaMateriaRepository exameDaMateriaRepository;
+
+    @Autowired
+    private ObjetoLaudoRepository objetoLaudoRepository;
 
     public List<ExameDaMateria> listar() {
         return exameDaMateriaRepository.findAll();
@@ -30,15 +36,21 @@ public class ExameDaMateriaService {
 
     @Transactional
     public ExameDaMateria salvar(ExameDaMateria exameDaMateria) {
-        if (exameDaMateria.getObjetos() == null) {
-            exameDaMateria.setObjetos(new ArrayList<>());
+        if (exameDaMateria.getObjetosIds() == null) {
+            exameDaMateria.setObjetosIds(new ArrayList<>());
         }
         ExameDaMateria exameSalvo = exameDaMateriaRepository.save(exameDaMateria);
         String exameId = exameSalvo.getId();
 
-        for (ObjetoLaudo obj : exameDaMateria.getObjetos()) {
-            obj.setExameDaMateriaId(exameId);
+        List<String> objetosIdsSalvos = new ArrayList<>();
+        for (String objetoId : exameDaMateria.getObjetosIds()) {
+            ObjetoLaudo objeto = buscarObjetoPorId(objetoId);
+
+
+            objeto.setExameDaMateriaId(exameId);
+            objetosIdsSalvos.add(objeto.getId());
         }
+        exameSalvo.getObjetosIds().addAll(objetosIdsSalvos);
         return exameDaMateriaRepository.save(exameSalvo);
     }
 
@@ -59,23 +71,7 @@ public class ExameDaMateriaService {
     public ExameDaMateria atualizar(String exameId, ExameDaMateria exame) {
         ExameDaMateria exameExistente = validarExame(exameId);
         exameExistente.setDescricao(exame.getDescricao());
-
-        List<ObjetoLaudo> objetosAtualizados = new ArrayList<>();
-        for (ObjetoLaudo objeto : exame.getObjetos()) {
-            ObjetoLaudo objetoExistente = exameExistente.getObjetos().stream()
-                    .filter(obj -> obj.getId().equals(objeto.getId()))
-                    .findFirst()
-                    .orElse(null);
-
-            if (objetoExistente != null) {
-                objetoExistente.atualizarExame(objeto);
-                objetosAtualizados.add(objetoExistente);
-            } else {
-                objeto.setExameDaMateriaId(exameId);
-                objetosAtualizados.add(objeto);
-            }
-        }
-        exameExistente.setObjetos(objetosAtualizados);
+        exameExistente.setObjetosIds(exame.getObjetosIds());
 
         return salvar(exameExistente);
     }
@@ -83,5 +79,10 @@ public class ExameDaMateriaService {
     private ExameDaMateria validarExame(String exameId) {
         return this.buscarPorId(exameId)
                 .orElseThrow(() -> new ExameDaMateriaNaoEncontradoException(EXAME_NAO_ENCONTRADO, exameId));
+    }
+
+    private ObjetoLaudo buscarObjetoPorId(String objetoId) {
+        return objetoLaudoRepository.findById(objetoId)
+                .orElseThrow(() -> new ObjetoLaudoNaoEncontradoException(OBJETO_NAO_ENCONTRADO, objetoId));
     }
 }

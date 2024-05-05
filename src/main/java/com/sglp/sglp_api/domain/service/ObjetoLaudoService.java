@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,8 +28,21 @@ public class ObjetoLaudoService {
     @Autowired
     private ExameDaMateriaService exameDaMateriaService;
 
-    public List<ObjetoLaudo> listar() {
-        return objetoLaudoRepository.findAll();
+    public List<ObjetoLaudo> listar(String exameId) {
+        Optional<ExameDaMateria> exameDaMateriaOptional = exameDaMateriaService.buscarPorId(exameId);
+
+        if(exameDaMateriaOptional.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        ExameDaMateria exame = exameDaMateriaOptional.get();
+        List<String> objetosIds = exame.getObjetosIds();
+
+        if(objetosIds == null || objetosIds.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        return objetoLaudoRepository.findAllById(objetosIds);
     }
 
     public ObjetoLaudo buscarPorId(String exameId, String objetoId) {
@@ -52,9 +66,9 @@ public class ObjetoLaudoService {
         objetoLaudo.setExameDaMateriaId(exame.getId());
 
         ObjetoLaudo objetoSalvo = objetoLaudoRepository.save(objetoLaudo);
+        exame.getObjetosIds().add(objetoSalvo.getId());
 
         Documento documento = this.documentoService.salvar(objetoSalvo.getDocumento());
-
         return this.objetoLaudoRepository.save(objetoLaudo);
     }
 
