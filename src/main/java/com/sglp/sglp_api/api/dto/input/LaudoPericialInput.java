@@ -1,5 +1,6 @@
 package com.sglp.sglp_api.api.dto.input;
 
+import com.sglp.sglp_api.domain.model.Processo;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,6 +12,7 @@ import java.util.List;
 @Setter
 public class LaudoPericialInput {
 
+    private ProcessoInput processo;
     @NotBlank
     private String objetivo;
     private List<ObjetoLaudoInput> objetos;

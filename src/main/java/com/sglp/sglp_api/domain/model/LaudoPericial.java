@@ -1,6 +1,7 @@
 package com.sglp.sglp_api.domain.model;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -21,6 +22,8 @@ public class LaudoPericial {
     @Id
     @EqualsAndHashCode.Include
     private String id;
+    @NotNull
+    private Processo processo;
     @NotBlank
     private String objetivo;
     @NotBlank

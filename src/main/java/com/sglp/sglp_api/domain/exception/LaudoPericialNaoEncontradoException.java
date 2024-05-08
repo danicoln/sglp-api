@@ -9,4 +9,8 @@ public class LaudoPericialNaoEncontradoException extends EntidadeNaoEncontradaEx
     public LaudoPericialNaoEncontradoException(Long laudoId) {
         this(String.format("Não existe um Laudo Pericial com o códgo %d", laudoId));
     }
+
+    public LaudoPericialNaoEncontradoException(String mensagem, String laudoId) {
+        super(mensagem);
+    }
 }
