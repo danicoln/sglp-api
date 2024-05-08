@@ -7,10 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class LaudoPericialService {
 
+    public static final String LAUDO_PERICIAL_NAO_ENCONTRADO = "Laudo Pericial com o ID %s não encontrado";
     @Autowired
     private LaudoPericialRepository laudoPericialRepository;
 
@@ -32,5 +34,30 @@ public class LaudoPericialService {
     public LaudoPericial buscarOuFalhar(String laudoId) {
         return laudoPericialRepository.findById(laudoId)
                 .orElseThrow(() -> new LaudoPericialNaoEncontradoException(laudoId));
+    }
+
+    public Optional<LaudoPericial> buscar(String laudoId) {
+        return this.laudoPericialRepository.findById(laudoId);
+    }
+
+    public LaudoPericial atualizar(String laudoId, LaudoPericial laudo) {
+        LaudoPericial laudoExistente = validarLaudo(laudoId);
+        laudoExistente.setProcesso(laudo.getProcesso());
+        laudoExistente.setExameDaMateria(laudo.getExameDaMateria());
+        laudoExistente.setObjetos(laudo.getObjetos());
+        laudoExistente.setQuesitos(laudo.getQuesitos());
+        laudoExistente.setConclusao(laudo.getConclusao());
+        laudoExistente.setHistorico(laudo.getHistorico());
+        laudoExistente.setIntroducao(laudo.getIntroducao());
+        laudoExistente.setDataDoLaudo(laudo.getDataDoLaudo());
+        laudoExistente.setMetodologiaAplicada(laudo.getMetodologiaAplicada());
+        laudoExistente.setObjetivo(laudo.getObjetivo());
+
+        return salvar(laudoExistente);
+    }
+
+    private LaudoPericial validarLaudo(String laudoId) {
+        return this.buscar(laudoId)
+                .orElseThrow(() -> new LaudoPericialNaoEncontradoException(LAUDO_PERICIAL_NAO_ENCONTRADO, laudoId));
     }
 }

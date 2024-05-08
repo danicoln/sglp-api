@@ -11,6 +11,7 @@ import java.util.List;
 public class LaudoPericialModel {
 
     private String id;
+    private ProcessoModel processo;
     private String objetivo;
     private List<ObjetoLaudoModel> objetos;
     private String metodologiaAplicada;
