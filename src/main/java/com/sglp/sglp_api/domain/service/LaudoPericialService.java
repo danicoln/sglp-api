@@ -5,6 +5,7 @@ import com.sglp.sglp_api.domain.model.LaudoPericial;
 import com.sglp.sglp_api.domain.repository.LaudoPericialRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,9 +14,11 @@ import java.util.Optional;
 public class LaudoPericialService {
 
     public static final String LAUDO_PERICIAL_NAO_ENCONTRADO = "Laudo Pericial com o ID %s não encontrado";
+
     @Autowired
     private LaudoPericialRepository laudoPericialRepository;
 
+    @Transactional
     public LaudoPericial salvar(LaudoPericial laudoPericial) {
         //TODO: implementar a busca dos objetos que compoem o laudo pericial
         /*
@@ -40,6 +43,7 @@ public class LaudoPericialService {
         return this.laudoPericialRepository.findById(laudoId);
     }
 
+    @Transactional
     public LaudoPericial atualizar(String laudoId, LaudoPericial laudo) {
         LaudoPericial laudoExistente = validarLaudo(laudoId);
         laudoExistente.setProcesso(laudo.getProcesso());
