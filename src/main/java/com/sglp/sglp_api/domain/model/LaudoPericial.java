@@ -26,11 +26,9 @@ public class LaudoPericial {
     private Processo processo;
     @NotBlank
     private String objetivo;
-    @NotBlank
     private List<ObjetoLaudo> objetos;
     @NotBlank
     private String metodologiaAplicada;
-    @NotBlank
     private ExameDaMateria exameDaMateria;
     @NotBlank
     private String historico;
