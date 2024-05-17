@@ -47,15 +47,15 @@ public class LaudoPericialService {
     public LaudoPericial atualizar(String laudoId, LaudoPericial laudo) {
         LaudoPericial laudoExistente = validarLaudo(laudoId);
         laudoExistente.setProcesso(laudo.getProcesso());
-        laudoExistente.setExameDaMateria(laudo.getExameDaMateria());
-        laudoExistente.setObjetos(laudo.getObjetos());
-        laudoExistente.setQuesitos(laudo.getQuesitos());
         laudoExistente.setConclusao(laudo.getConclusao());
         laudoExistente.setHistorico(laudo.getHistorico());
         laudoExistente.setIntroducao(laudo.getIntroducao());
         laudoExistente.setDataDoLaudo(laudo.getDataDoLaudo());
         laudoExistente.setMetodologiaAplicada(laudo.getMetodologiaAplicada());
         laudoExistente.setObjetivo(laudo.getObjetivo());
+//        laudoExistente.setExameDaMateria(laudo.getExameDaMateria());
+//        laudoExistente.setObjetos(laudo.getObjetos());
+//        laudoExistente.setQuesitos(laudo.getQuesitos());
 
         return salvar(laudoExistente);
     }

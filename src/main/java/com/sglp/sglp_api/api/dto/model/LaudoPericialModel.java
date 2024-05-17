@@ -13,12 +13,13 @@ public class LaudoPericialModel {
     private String id;
     private ProcessoModel processo;
     private String objetivo;
-    private List<ObjetoLaudoModel> objetos;
     private String metodologiaAplicada;
-    private ExameDaMateriaModel exameDaMateria;
-    private String historico;
-    private List<QuesitoModel> quesitos;
-    private String conclusao;
     private String introducao;
     private OffsetDateTime dataDoLaudo;
+    private String conclusao;
+    private String historico;
+
+    //    private List<ObjetoLaudoModel> objetos;
+    //    private ExameDaMateriaModel exameDaMateria;
+    //    private List<QuesitoModel> quesitos;
 }

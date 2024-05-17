@@ -2,6 +2,7 @@ package com.sglp.sglp_api.api.dto.input;
 
 import com.sglp.sglp_api.domain.model.Processo;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,19 +13,21 @@ import java.util.List;
 @Setter
 public class LaudoPericialInput {
 
+    @NotNull
     private ProcessoInput processo;
-    @NotBlank
+//    @NotBlank
     private String objetivo;
-    private List<ObjetoLaudoInput> objetos;
-    @NotBlank
+//    @NotBlank
     private String metodologiaAplicada;
-    private ExameDaMateriaInput exameDaMateria;
-    @NotBlank
-    private String historico;
-    private List<QuesitoInput> quesitos;
-    @NotBlank
+//    @NotBlank
     private String conclusao;
-    @NotBlank
+//    @NotBlank
     private String introducao;
     private OffsetDateTime dataDoLaudo;
+//    @NotBlank
+    private String historico;
+
+//    private List<QuesitoInput> quesitos;
+//    private List<ObjetoLaudoInput> objetos;
+//    private ExameDaMateriaInput exameDaMateria;
 }
