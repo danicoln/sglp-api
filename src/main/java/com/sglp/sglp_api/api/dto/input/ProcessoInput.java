@@ -17,4 +17,5 @@ public class ProcessoInput {
     private String nomeReu;
     private String assunto;
 
+    private String laudoId;
 }

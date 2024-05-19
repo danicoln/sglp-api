@@ -30,4 +30,6 @@ public class Processo implements Serializable {
     private String nomeAutor;
     private String nomeReu;
     private String assunto;
+
+    private String laudoId;
 }

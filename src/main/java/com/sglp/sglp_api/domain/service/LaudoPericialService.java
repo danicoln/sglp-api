@@ -1,7 +1,9 @@
 package com.sglp.sglp_api.domain.service;
 
 import com.sglp.sglp_api.domain.exception.LaudoPericialNaoEncontradoException;
+import com.sglp.sglp_api.domain.model.ExameDaMateria;
 import com.sglp.sglp_api.domain.model.LaudoPericial;
+import com.sglp.sglp_api.domain.model.Processo;
 import com.sglp.sglp_api.domain.repository.LaudoPericialRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,7 @@ public class LaudoPericialService {
     @Transactional
     public LaudoPericial salvar(LaudoPericial laudoPericial) {
         //TODO: implementar a busca dos objetos que compoem o laudo pericial
+
         /*
         Long objetoLaudoId = laudoPericial.getObjeto().getId();
         Long examePericiaId = laudoPericial.getExameDaMateria().getId();
@@ -53,7 +56,7 @@ public class LaudoPericialService {
         laudoExistente.setDataDoLaudo(laudo.getDataDoLaudo());
         laudoExistente.setMetodologiaAplicada(laudo.getMetodologiaAplicada());
         laudoExistente.setObjetivo(laudo.getObjetivo());
-//        laudoExistente.setExameDaMateria(laudo.getExameDaMateria());
+        laudoExistente.setExameDaMateria(laudo.getExameDaMateria());
 //        laudoExistente.setObjetos(laudo.getObjetos());
 //        laudoExistente.setQuesitos(laudo.getQuesitos());
 

@@ -68,9 +68,9 @@ public class ObjetoLaudoResource {
 
     @DeleteMapping("/{objetoId}")
     public ResponseEntity<?> remover(@PathVariable String exameId, @PathVariable String objetoId) {
-        Optional<ExameDaMateria> exameDaMateria = service.buscarExame(exameId);
+        ExameDaMateria exameDaMateria = service.buscarExame(exameId);
 
-        if (exameDaMateria.isEmpty()) {
+        if (exameDaMateria == null) {
             return ResponseEntity.notFound().build();
         }
         ObjetoLaudo objetoLaudo = service.buscarPorId(exameId, objetoId);
