@@ -18,8 +18,8 @@ public class LaudoPericialModel {
     private OffsetDateTime dataDoLaudo;
     private String conclusao;
     private String historico;
+    private ExameDaMateriaModel exameDaMateria;
 
     //    private List<ObjetoLaudoModel> objetos;
-    //    private ExameDaMateriaModel exameDaMateria;
     //    private List<QuesitoModel> quesitos;
 }

@@ -36,7 +36,9 @@ public class LaudoPericial {
     @NotBlank
     private String metodologiaAplicada;
 
+    @NotNull
+    private ExameDaMateria exameDaMateria;
+
     //private List<Quesito> quesitos;
-    //private ExameDaMateria exameDaMateria;
     //private List<ObjetoLaudo> objetos;
 }

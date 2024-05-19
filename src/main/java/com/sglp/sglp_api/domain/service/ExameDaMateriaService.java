@@ -1,8 +1,11 @@
 package com.sglp.sglp_api.domain.service;
 
+import com.sglp.sglp_api.api.dto.model.ExameDaMateriaModel;
 import com.sglp.sglp_api.domain.exception.ExameDaMateriaNaoEncontradoException;
+import com.sglp.sglp_api.domain.exception.ExameExistenteException;
 import com.sglp.sglp_api.domain.exception.ObjetoLaudoNaoEncontradoException;
 import com.sglp.sglp_api.domain.model.ExameDaMateria;
+import com.sglp.sglp_api.domain.model.LaudoPericial;
 import com.sglp.sglp_api.domain.model.ObjetoLaudo;
 import com.sglp.sglp_api.domain.repository.ExameDaMateriaRepository;
 import com.sglp.sglp_api.domain.repository.ObjetoLaudoRepository;
@@ -11,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +23,7 @@ public class ExameDaMateriaService {
 
     private static final String EXAME_NAO_ENCONTRADO = "Exame com o ID %d não encontrado";
     private static final String OBJETO_NAO_ENCONTRADO = "Objeto com o ID %d não encontrado";
+    private static final String EXAME_EXISTENTE = "Já existe um exame com ID associado ao laudo pericial %s";
 
     @Autowired
     private ExameDaMateriaRepository exameDaMateriaRepository;
@@ -26,26 +31,43 @@ public class ExameDaMateriaService {
     @Autowired
     private ObjetoLaudoRepository objetoLaudoRepository;
 
-    public List<ExameDaMateria> listar() {
-        return exameDaMateriaRepository.findAll();
-    }
+    @Autowired
+    private LaudoPericialService laudoPericialService;
+
+    //TODO: Se um laudo pericial contém apenas um único exame, não é necessário um método de listagem de exames ?!
+//    public List<ExameDaMateria> listar(String laudoId) {
+//        LaudoPericial laudoPericial = laudoPericialService.buscarOuFalhar(laudoId);
+//
+//        if (laudoPericial == null) {
+//            return Collections.emptyList();
+//        }
+//    }
 
     public ExameDaMateria buscar(String exameId) {
         return this.buscarOuFalhar(exameId);
     }
 
     @Transactional
-    public ExameDaMateria salvar(ExameDaMateria exameDaMateria) {
+    public ExameDaMateria salvar(String laudoId, ExameDaMateria exameDaMateria) {
+        LaudoPericial laudo = laudoPericialService.buscarOuFalhar(laudoId);
+
+        if(laudo.getExameDaMateria() != null && !laudo.getExameDaMateria().getId().isEmpty()) {
+            throw new ExameExistenteException(EXAME_EXISTENTE , laudoId);
+        }
+        //exameDaMateria.setLaudoPericial(laudo);
+
+        ExameDaMateria exameSalvo = exameDaMateriaRepository.save(exameDaMateria);
+        laudo.setExameDaMateria(exameSalvo);
+        laudoPericialService.salvar(laudo);
+
         if (exameDaMateria.getObjetosIds() == null) {
             exameDaMateria.setObjetosIds(new ArrayList<>());
         }
-        ExameDaMateria exameSalvo = exameDaMateriaRepository.save(exameDaMateria);
         String exameId = exameSalvo.getId();
 
         List<String> objetosIdsSalvos = new ArrayList<>();
         for (String objetoId : exameDaMateria.getObjetosIds()) {
             ObjetoLaudo objeto = buscarObjetoPorId(objetoId);
-
 
             objeto.setExameDaMateriaId(exameId);
             objetosIdsSalvos.add(objeto.getId());
@@ -63,22 +85,25 @@ public class ExameDaMateriaService {
         exameDaMateriaRepository.deleteById(exameId);
     }
 
-    public Optional<ExameDaMateria> buscarPorId(String exameId) {
-        return exameDaMateriaRepository.findById(exameId);
+    public ExameDaMateria buscarPorId(String laudoId, String exameId) {
+        LaudoPericial laudoPericial = laudoPericialService.buscarOuFalhar(laudoId);
+        Optional<ExameDaMateria> exameOptional = exameDaMateriaRepository.findById(exameId);
+
+        return exameOptional.get();
     }
 
     @Transactional
-    public ExameDaMateria atualizar(String exameId, ExameDaMateria exame) {
-        ExameDaMateria exameExistente = validarExame(exameId);
-        exameExistente.setDescricao(exame.getDescricao());
-        exameExistente.setObjetosIds(exame.getObjetosIds());
+    public ExameDaMateria atualizar(String laudoId, String exameId, ExameDaMateria exame) {
+        Optional<LaudoPericial> laudoOptional = laudoPericialService.buscar(laudoId);
+        ExameDaMateria exameExistente = buscarOuFalhar(exameId);
 
-        return salvar(exameExistente);
-    }
+        if(laudoOptional.isPresent()){
+            exameExistente.setDescricao(exame.getDescricao());
+            exameExistente.setObjetosIds(exame.getObjetosIds());
+            return salvar(laudoOptional.get().getId(), exameExistente);
 
-    private ExameDaMateria validarExame(String exameId) {
-        return this.buscarPorId(exameId)
-                .orElseThrow(() -> new ExameDaMateriaNaoEncontradoException(EXAME_NAO_ENCONTRADO, exameId));
+        }
+        return null;
     }
 
     private ObjetoLaudo buscarObjetoPorId(String objetoId) {

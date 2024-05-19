@@ -13,23 +13,29 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/exames")
+@RequestMapping("/api/laudos/{laudoId}/exames")
 public class ExameDaMateriaResource {
 
     @Autowired
-    private ExameDaMateriaService exameDaMateriaService;
+    private ExameDaMateriaService service;
 
     @Autowired
     private ExameDaMateriaMapper mapper;
 
-    @GetMapping
-    public List<ExameDaMateriaModel> listar() {
-        return mapper.toModelList(exameDaMateriaService.listar());
-    }
+    //TODO: Se um laudo pericial contém apenas um único exame, não é necessário um método de listagem de exames ?!
+//    @GetMapping
+//    public ResponseEntity<ExameDaMateriaModel> listar(@PathVariable String laudoId) {
+//        ExameDaMateria exameDaMateria = service.listar(laudoId);
+//        if(exameDaMateria == null) {
+//            return ResponseEntity.notFound().build();
+//        }
+//        return ResponseEntity.ok(mapper.toModel(exameDaMateria));
+//    }
 
     @GetMapping("/{exameId}")
-    public ResponseEntity<ExameDaMateriaModel> buscar(@PathVariable String exameId) {
-        ExameDaMateria exameDaMateria = exameDaMateriaService.buscar(exameId);
+    public ResponseEntity<?> buscarPoId(@PathVariable String laudoId,
+                                        @PathVariable String exameId) {
+        final var exameDaMateria = service.buscarPorId(laudoId, exameId);
 
         if (exameDaMateria != null) {
             ExameDaMateriaModel model = mapper.toModel(exameDaMateria);
@@ -39,27 +45,30 @@ public class ExameDaMateriaResource {
     }
 
     @PostMapping
-    public ResponseEntity<ExameDaMateriaModel> salvar(@RequestBody ExameDaMateriaInput input) {
+    public ResponseEntity<ExameDaMateriaModel> salvar(@PathVariable String laudoId,
+                                                      @RequestBody ExameDaMateriaInput input) {
         ExameDaMateria exameDaMateria = mapper.toEntity(input);
-        ExameDaMateriaModel model = mapper.toModel(exameDaMateriaService.salvar(exameDaMateria));
+        ExameDaMateriaModel model = mapper.toModel(service.salvar(laudoId, exameDaMateria));
         return ResponseEntity.status(HttpStatus.CREATED).body(model);
     }
 
     @PutMapping("/{exameId}")
-    public ResponseEntity<ExameDaMateriaModel> atualizar(@PathVariable String exameId,
+    public ResponseEntity<ExameDaMateriaModel> atualizar(@PathVariable String laudoId,
+                                                         @PathVariable String exameId,
                                                          @RequestBody ExameDaMateriaInput input) {
         ExameDaMateria exame = mapper.toEntity(input);
-        ExameDaMateria exameAtualizado = exameDaMateriaService.atualizar(exameId, exame);
+        ExameDaMateria exameAtualizado = service.atualizar(laudoId, exameId, exame);
         ExameDaMateriaModel model = mapper.toModel(exameAtualizado);
 
         return ResponseEntity.ok(model);
     }
 
     @DeleteMapping("/{exameId}")
-    public ResponseEntity<ExameDaMateria> remover(@PathVariable String exameId) {
-        ExameDaMateria exame = exameDaMateriaService.buscarOuFalhar(exameId);
+    public ResponseEntity<ExameDaMateria> remover(@PathVariable String laudoId,
+                                                  @PathVariable String exameId) {
+        ExameDaMateria exame = service.buscarOuFalhar(exameId);
         if (exame.getId().equals(exameId)) {
-            exameDaMateriaService.remover(exameId);
+            service.remover(exameId);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();

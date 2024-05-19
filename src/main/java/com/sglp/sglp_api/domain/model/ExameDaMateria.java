@@ -21,5 +21,6 @@ public class ExameDaMateria {
     @EqualsAndHashCode.Include
     private String id;
     private List<String> objetosIds;
+
     private String descricao;
 }

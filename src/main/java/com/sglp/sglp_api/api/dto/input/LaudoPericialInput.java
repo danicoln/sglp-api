@@ -26,8 +26,8 @@ public class LaudoPericialInput {
     private OffsetDateTime dataDoLaudo;
 //    @NotBlank
     private String historico;
+    private ExameDaMateriaInput exameDaMateria;
 
 //    private List<QuesitoInput> quesitos;
 //    private List<ObjetoLaudoInput> objetos;
-//    private ExameDaMateriaInput exameDaMateria;
 }

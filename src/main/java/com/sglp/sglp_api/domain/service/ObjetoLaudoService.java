@@ -29,13 +29,12 @@ public class ObjetoLaudoService {
     private ExameDaMateriaService exameDaMateriaService;
 
     public List<ObjetoLaudo> listar(String exameId) {
-        Optional<ExameDaMateria> exameDaMateriaOptional = exameDaMateriaService.buscarPorId(exameId);
+        ExameDaMateria exame = exameDaMateriaService.buscarOuFalhar(exameId);
 
-        if(exameDaMateriaOptional.isEmpty()) {
+        if(exame == null) {
             return Collections.emptyList();
         }
 
-        ExameDaMateria exame = exameDaMateriaOptional.get();
         List<String> objetosIds = exame.getObjetosIds();
 
         if(objetosIds == null || objetosIds.isEmpty()) {
@@ -81,12 +80,8 @@ public class ObjetoLaudoService {
         objetoLaudoRepository.deleteById(objetoId);
     }
 
-    public Optional<ExameDaMateria> buscarExame(String exameId) {
-        Optional<ExameDaMateria> exameDaMateria = exameDaMateriaService.buscarPorId(exameId);
-        if (exameDaMateria.isPresent()) {
-            return exameDaMateria;
-        }
-        return null;
+    public ExameDaMateria buscarExame(String exameId) {
+        return exameDaMateriaService.buscarOuFalhar(exameId);
     }
 
     @Transactional
@@ -104,7 +99,6 @@ public class ObjetoLaudoService {
     }
 
     private ExameDaMateria validarExistenciaExame(String exameId) {
-        return exameDaMateriaService.buscarPorId(exameId)
-                .orElseThrow(() -> new ExameDaMateriaNaoEncontradoException(EXAME_NAO_ENCONTRADO, exameId));
+        return exameDaMateriaService.buscarOuFalhar(exameId);
     }
 }
