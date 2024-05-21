@@ -1,6 +1,5 @@
 package com.sglp.sglp_api.domain.service;
 
-import com.sglp.sglp_api.api.dto.model.ExameDaMateriaModel;
 import com.sglp.sglp_api.domain.exception.ExameDaMateriaNaoEncontradoException;
 import com.sglp.sglp_api.domain.exception.ExameExistenteException;
 import com.sglp.sglp_api.domain.exception.ObjetoLaudoNaoEncontradoException;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,14 +32,10 @@ public class ExameDaMateriaService {
     @Autowired
     private LaudoPericialService laudoPericialService;
 
-    //TODO: Se um laudo pericial contém apenas um único exame, não é necessário um método de listagem de exames ?!
-//    public List<ExameDaMateria> listar(String laudoId) {
-//        LaudoPericial laudoPericial = laudoPericialService.buscarOuFalhar(laudoId);
-//
-//        if (laudoPericial == null) {
-//            return Collections.emptyList();
-//        }
-//    }
+    public ExameDaMateria obterExame(String laudoId) {
+        LaudoPericial laudoPericial = laudoPericialService.buscarOuFalhar(laudoId);
+        return laudoPericial.getExameDaMateria();
+    }
 
     public ExameDaMateria buscar(String exameId) {
         return this.buscarOuFalhar(exameId);
@@ -51,10 +45,9 @@ public class ExameDaMateriaService {
     public ExameDaMateria salvar(String laudoId, ExameDaMateria exameDaMateria) {
         LaudoPericial laudo = laudoPericialService.buscarOuFalhar(laudoId);
 
-        if(laudo.getExameDaMateria() != null && !laudo.getExameDaMateria().getId().isEmpty()) {
-            throw new ExameExistenteException(EXAME_EXISTENTE , laudoId);
+        if (laudo.getExameDaMateria() != null && !laudo.getExameDaMateria().getId().isEmpty()) {
+            throw new ExameExistenteException(EXAME_EXISTENTE, laudoId);
         }
-        //exameDaMateria.setLaudoPericial(laudo);
 
         ExameDaMateria exameSalvo = exameDaMateriaRepository.save(exameDaMateria);
         laudo.setExameDaMateria(exameSalvo);
@@ -97,7 +90,7 @@ public class ExameDaMateriaService {
         Optional<LaudoPericial> laudoOptional = laudoPericialService.buscar(laudoId);
         ExameDaMateria exameExistente = buscarOuFalhar(exameId);
 
-        if(laudoOptional.isPresent()){
+        if (laudoOptional.isPresent()) {
             exameExistente.setDescricao(exame.getDescricao());
             exameExistente.setObjetosIds(exame.getObjetosIds());
             return salvar(laudoOptional.get().getId(), exameExistente);
