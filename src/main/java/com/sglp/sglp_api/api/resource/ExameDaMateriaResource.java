@@ -10,8 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/laudos/{laudoId}/exames")
 public class ExameDaMateriaResource {
@@ -22,15 +20,14 @@ public class ExameDaMateriaResource {
     @Autowired
     private ExameDaMateriaMapper mapper;
 
-    //TODO: Se um laudo pericial contém apenas um único exame, não é necessário um método de listagem de exames ?!
-//    @GetMapping
-//    public ResponseEntity<ExameDaMateriaModel> listar(@PathVariable String laudoId) {
-//        ExameDaMateria exameDaMateria = service.listar(laudoId);
-//        if(exameDaMateria == null) {
-//            return ResponseEntity.notFound().build();
-//        }
-//        return ResponseEntity.ok(mapper.toModel(exameDaMateria));
-//    }
+    @GetMapping
+    public ResponseEntity<ExameDaMateriaModel> obterExame(@PathVariable String laudoId) {
+        ExameDaMateria exameDaMateria = service.obterExame(laudoId);
+        if(exameDaMateria == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(mapper.toModel(exameDaMateria));
+    }
 
     @GetMapping("/{exameId}")
     public ResponseEntity<?> buscarPoId(@PathVariable String laudoId,
