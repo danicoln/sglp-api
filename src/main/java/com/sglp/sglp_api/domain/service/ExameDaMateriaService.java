@@ -45,8 +45,11 @@ public class ExameDaMateriaService {
     public ExameDaMateria salvar(String laudoId, ExameDaMateria exameDaMateria) {
         LaudoPericial laudo = laudoPericialService.buscarOuFalhar(laudoId);
 
-        if (laudo.getExameDaMateria() != null && !laudo.getExameDaMateria().getId().isEmpty()) {
-            throw new ExameExistenteException(EXAME_EXISTENTE, laudoId);
+        if(exameDaMateria.getId() == null || exameDaMateria.getId().isEmpty()) {
+
+            if (laudo.getExameDaMateria() != null && !laudo.getExameDaMateria().getId().isEmpty()) {
+                throw new ExameExistenteException(EXAME_EXISTENTE, laudoId);
+            }
         }
 
         ExameDaMateria exameSalvo = exameDaMateriaRepository.save(exameDaMateria);
@@ -74,8 +77,9 @@ public class ExameDaMateriaService {
                 .orElseThrow(() -> new ExameDaMateriaNaoEncontradoException(exameId));
     }
 
-    public void remover(String exameId) {
+    public void remover(String laudoId, String exameId) {
         exameDaMateriaRepository.deleteById(exameId);
+        removerExameDoLaudoById(laudoId);
     }
 
     public ExameDaMateria buscarPorId(String laudoId, String exameId) {
@@ -102,5 +106,11 @@ public class ExameDaMateriaService {
     private ObjetoLaudo buscarObjetoPorId(String objetoId) {
         return objetoLaudoRepository.findById(objetoId)
                 .orElseThrow(() -> new ObjetoLaudoNaoEncontradoException(OBJETO_NAO_ENCONTRADO, objetoId));
+    }
+
+    private void removerExameDoLaudoById(String laudoId) {
+        LaudoPericial laudoPericial = laudoPericialService.buscarOuFalhar(laudoId);
+        laudoPericial.setExameDaMateria(null);
+        laudoPericialService.salvar(laudoPericial);
     }
 }
