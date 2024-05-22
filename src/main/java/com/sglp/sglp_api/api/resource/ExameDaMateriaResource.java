@@ -65,7 +65,7 @@ public class ExameDaMateriaResource {
                                                   @PathVariable String exameId) {
         ExameDaMateria exame = service.buscarOuFalhar(exameId);
         if (exame.getId().equals(exameId)) {
-            service.remover(exameId);
+            service.remover(laudoId, exameId);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
