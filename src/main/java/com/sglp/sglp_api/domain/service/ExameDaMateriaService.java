@@ -113,4 +113,10 @@ public class ExameDaMateriaService {
         laudoPericial.setExameDaMateria(null);
         laudoPericialService.salvar(laudoPericial);
     }
+
+    public void atualizarObjetos(String exameId, List<String> objetosIds) {
+        ExameDaMateria exameDaMateria = buscarOuFalhar(exameId);
+        exameDaMateria.setObjetosIds(objetosIds);
+        exameDaMateriaRepository.save(exameDaMateria);
+    }
 }

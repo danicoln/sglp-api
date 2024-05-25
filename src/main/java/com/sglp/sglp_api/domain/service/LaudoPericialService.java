@@ -1,9 +1,7 @@
 package com.sglp.sglp_api.domain.service;
 
 import com.sglp.sglp_api.domain.exception.LaudoPericialNaoEncontradoException;
-import com.sglp.sglp_api.domain.model.ExameDaMateria;
 import com.sglp.sglp_api.domain.model.LaudoPericial;
-import com.sglp.sglp_api.domain.model.Processo;
 import com.sglp.sglp_api.domain.repository.LaudoPericialRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
