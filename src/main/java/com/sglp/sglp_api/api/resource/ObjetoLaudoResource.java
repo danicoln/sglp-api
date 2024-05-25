@@ -36,11 +36,6 @@ public class ObjetoLaudoResource {
 
     @GetMapping
     public ResponseEntity<List<ObjetoLaudoModel>> listar(@PathVariable String exameId) {
-//        Optional<ExameDaMateria> exameOpt = service.buscarExame(exameId);
-//
-//        if (exameOpt.isEmpty() || exameOpt == null) {
-//        }
-//        ExameDaMateria exame = exameOpt.get();
         List<ObjetoLaudo> objetos = service.listar(exameId);
         if(objetos == null || objetos.isEmpty()) {
             return ResponseEntity.notFound().build();

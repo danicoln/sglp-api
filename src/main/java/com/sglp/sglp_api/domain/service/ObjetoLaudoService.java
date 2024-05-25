@@ -1,6 +1,5 @@
 package com.sglp.sglp_api.domain.service;
 
-import com.sglp.sglp_api.domain.exception.ExameDaMateriaNaoEncontradoException;
 import com.sglp.sglp_api.domain.exception.ObjetoLaudoNaoEncontradoException;
 import com.sglp.sglp_api.domain.model.Documento;
 import com.sglp.sglp_api.domain.model.ExameDaMateria;
@@ -12,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ObjetoLaudoService {
@@ -31,13 +29,13 @@ public class ObjetoLaudoService {
     public List<ObjetoLaudo> listar(String exameId) {
         ExameDaMateria exame = exameDaMateriaService.buscarOuFalhar(exameId);
 
-        if(exame == null) {
+        if (exame == null) {
             return Collections.emptyList();
         }
 
         List<String> objetosIds = exame.getObjetosIds();
 
-        if(objetosIds == null || objetosIds.isEmpty()) {
+        if (objetosIds == null || objetosIds.isEmpty()) {
             return Collections.emptyList();
         }
 
@@ -60,15 +58,19 @@ public class ObjetoLaudoService {
     }
 
     @Transactional
-    public ObjetoLaudo salvar(String exameId, ObjetoLaudo objetoLaudo) {
+    public ObjetoLaudo salvar(String exameId, ObjetoLaudo objeto) {
         ExameDaMateria exame = exameDaMateriaService.buscarOuFalhar(exameId);
-        objetoLaudo.setExameDaMateriaId(exame.getId());
+        objeto.setExameDaMateriaId(exame.getId());
 
-        ObjetoLaudo objetoSalvo = objetoLaudoRepository.save(objetoLaudo);
-        exame.getObjetosIds().add(objetoSalvo.getId());
+        Documento documento = objeto.getDocumento();
+        Documento documentoSalvo = documentoService.salvar(documento);
+        objeto.setDocumento(documentoSalvo);
 
-        Documento documento = this.documentoService.salvar(objetoSalvo.getDocumento());
-        return this.objetoLaudoRepository.save(objetoLaudo);
+        ObjetoLaudo objetoSalvo = objetoLaudoRepository.save(objeto);
+        exame.getObjetosIds().add(objeto.getId());
+        exameDaMateriaService.atualizarObjetos(exame.getId(), exame.getObjetosIds());
+
+        return objetoSalvo;
     }
 
     @Transactional
