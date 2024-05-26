@@ -23,24 +23,12 @@ public class ObjetoLaudoService {
     private ExameDaMateriaService exameDaMateriaService;
 
     public List<ObjetoLaudo> listar(String exameId) {
-        ExameDaMateria exame = exameDaMateriaService.buscarOuFalhar(exameId);
-
-        if (exame == null) {
-            return Collections.emptyList();
-        }
-
-        List<String> objetosIds = exame.getObjetosIds();
-
-        if (objetosIds == null || objetosIds.isEmpty()) {
-            return Collections.emptyList();
-        }
-
-        return objetoLaudoRepository.findAllById(objetosIds);
+        return objetoLaudoRepository.findByExameDaMateriaId(exameId);
     }
 
     public ObjetoLaudo buscarPorId(String exameId, String objetoId) {
-        ExameDaMateria exame = validarExistenciaExame(exameId);
-        ObjetoLaudo objetoEncontrado = validarExistenciaObjeto(objetoId);
+        ExameDaMateria exame = exameDaMateriaService.buscarOuFalhar(exameId);
+        ObjetoLaudo objetoEncontrado = buscarOuFalhar(objetoId);
 
         if (!exame.getId().equals(objetoEncontrado.getExameDaMateriaId())) {
             throw new ObjetoLaudoNaoEncontradoException(OBJETO_NAO_ENCONTRADO, objetoId);
@@ -56,13 +44,8 @@ public class ObjetoLaudoService {
     @Transactional
     public ObjetoLaudo salvar(String exameId, ObjetoLaudo objeto) {
         ExameDaMateria exame = exameDaMateriaService.buscarOuFalhar(exameId);
-        objeto.setExameDaMateriaId(exame.getId());
-
-        ObjetoLaudo objetoSalvo = objetoLaudoRepository.save(objeto);
-        exame.getObjetosIds().add(objeto.getId());
-        exameDaMateriaService.atualizarObjetos(exame.getId(), exame.getObjetosIds());
-
-        return objetoSalvo;
+        adicionaNaListaObjetoIds(objeto, exame);
+        return objetoLaudoRepository.save(objeto);
     }
 
     public void remover(String objetoId) {
@@ -74,20 +57,17 @@ public class ObjetoLaudoService {
     }
 
     @Transactional
-    public ObjetoLaudo atualizar(String exameId, String objetoId, ObjetoLaudo objetoLaudo) {
-
-        ExameDaMateria exame = validarExistenciaExame(exameId);
-        ObjetoLaudo objetoExistente = validarExistenciaObjeto(objetoId);
-        objetoExistente.atualizarExame(objetoLaudo);
-        return salvar(exame.getId(), objetoExistente);
+    public ObjetoLaudo atualizar(String objetoId, ObjetoLaudo objetoLaudo) {
+        ObjetoLaudo objetoExistente = buscarOuFalhar(objetoId);
+        objetoExistente.setNomeTitulo(objetoLaudo.getNomeTitulo());
+        objetoExistente.setDescricao(objetoLaudo.getDescricao());
+        objetoExistente.setData(objetoLaudo.getData());
+        return objetoLaudoRepository.save(objetoExistente);
     }
 
-    private ObjetoLaudo validarExistenciaObjeto(String objetoId) {
-        return objetoLaudoRepository.findById(objetoId)
-                .orElseThrow(() -> new ObjetoLaudoNaoEncontradoException(OBJETO_NAO_ENCONTRADO, objetoId));
+    private void adicionaNaListaObjetoIds(ObjetoLaudo objeto, ExameDaMateria exame) {
+        exame.getObjetosIds().add(objeto.getId());
+        exameDaMateriaService.atualizarObjetos(exame.getId(), exame.getObjetosIds());
     }
 
-    private ExameDaMateria validarExistenciaExame(String exameId) {
-        return exameDaMateriaService.buscarOuFalhar(exameId);
-    }
 }
