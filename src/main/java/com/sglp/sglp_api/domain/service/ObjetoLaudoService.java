@@ -1,7 +1,6 @@
 package com.sglp.sglp_api.domain.service;
 
 import com.sglp.sglp_api.domain.exception.ObjetoLaudoNaoEncontradoException;
-import com.sglp.sglp_api.domain.model.Documento;
 import com.sglp.sglp_api.domain.model.ExameDaMateria;
 import com.sglp.sglp_api.domain.model.ObjetoLaudo;
 import com.sglp.sglp_api.domain.repository.ObjetoLaudoRepository;
@@ -19,9 +18,6 @@ public class ObjetoLaudoService {
     private static final String OBJETO_NAO_ENCONTRADO = "Objeto com o ID %d não encontrado";
     @Autowired
     private ObjetoLaudoRepository objetoLaudoRepository;
-
-    @Autowired
-    private DocumentoService documentoService;
 
     @Autowired
     private ExameDaMateriaService exameDaMateriaService;
@@ -62,20 +58,11 @@ public class ObjetoLaudoService {
         ExameDaMateria exame = exameDaMateriaService.buscarOuFalhar(exameId);
         objeto.setExameDaMateriaId(exame.getId());
 
-        Documento documento = objeto.getDocumento();
-        Documento documentoSalvo = documentoService.salvar(documento);
-        objeto.setDocumento(documentoSalvo);
-
         ObjetoLaudo objetoSalvo = objetoLaudoRepository.save(objeto);
         exame.getObjetosIds().add(objeto.getId());
         exameDaMateriaService.atualizarObjetos(exame.getId(), exame.getObjetosIds());
 
         return objetoSalvo;
-    }
-
-    @Transactional
-    private Documento salvarDocumento(Documento documento) {
-        return documentoService.salvar(documento);
     }
 
     public void remover(String objetoId) {

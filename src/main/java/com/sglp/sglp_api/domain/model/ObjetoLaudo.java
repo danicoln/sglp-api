@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,10 +20,14 @@ public class ObjetoLaudo {
     @EqualsAndHashCode.Include
     private String id;
     private String exameDaMateriaId;
-    private Documento documento;
+    private String nomeTitulo;
+    private String descricao;
+    private LocalDateTime data;
 
     public void atualizarExame(ObjetoLaudo objetoLaudo) {
         this.setExameDaMateriaId(objetoLaudo.exameDaMateriaId);
-        this.setDocumento(objetoLaudo.getDocumento());
+        this.setNomeTitulo(objetoLaudo.getNomeTitulo());
+        this.setDescricao(objetoLaudo.getDescricao());
+        this.setData(objetoLaudo.getData());
     }
 }
