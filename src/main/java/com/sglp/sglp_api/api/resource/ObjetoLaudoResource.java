@@ -56,7 +56,7 @@ public class ObjetoLaudoResource {
     public ResponseEntity<ObjetoLaudoModel> atualizar(@PathVariable String exameId, @PathVariable String objetoId,
                                                       @RequestBody ObjetoLaudoInput input) {
         ObjetoLaudo objetoLaudo = mapper.toEntity(input);
-        ObjetoLaudo objSalvo = service.atualizar(exameId, objetoId, objetoLaudo);
+        ObjetoLaudo objSalvo = service.atualizar(objetoId, objetoLaudo);
         ObjetoLaudoModel model = mapper.toModel(objSalvo);
         return ResponseEntity.ok(model);
     }
