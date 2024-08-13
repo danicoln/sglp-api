@@ -14,5 +14,6 @@ public class PeritoInput {
     private DadosPeritoInput dadosPerito;
     private List<NomeacaoIdInput> nomeacoes;
     private List<LaudoPericialIdInput> laudosPericiais;
+    private boolean ativo;
 
 }

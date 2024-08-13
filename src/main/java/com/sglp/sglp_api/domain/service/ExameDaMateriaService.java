@@ -27,13 +27,10 @@ public class ExameDaMateriaService {
     private ExameDaMateriaRepository exameDaMateriaRepository;
 
     @Autowired
-    private ObjetoLaudoRepository objetoLaudoRepository;
-
-    @Autowired
     private LaudoPericialService laudoPericialService;
 
     public ExameDaMateria obterExame(String laudoId) {
-        LaudoPericial laudoPericial = laudoPericialService.buscarOuFalhar(laudoId);
+        LaudoPericial laudoPericial = laudoPericialService.buscarPorIdOuFalhar(laudoId);
         return laudoPericial.getExameDaMateria();
     }
 
@@ -43,7 +40,7 @@ public class ExameDaMateriaService {
 
     @Transactional
     public ExameDaMateria salvar(String laudoId, ExameDaMateria exameDaMateria) {
-        LaudoPericial laudo = laudoPericialService.buscarOuFalhar(laudoId);
+        LaudoPericial laudo = laudoPericialService.buscarPorIdOuFalhar(laudoId);
 
         if(exameDaMateria.getId() == null || exameDaMateria.getId().isEmpty()) {
 
@@ -55,21 +52,8 @@ public class ExameDaMateriaService {
         ExameDaMateria exameSalvo = exameDaMateriaRepository.save(exameDaMateria);
         laudo.setExameDaMateria(exameSalvo);
         laudoPericialService.salvar(laudo);
+        return exameSalvo;
 
-        if (exameDaMateria.getObjetosIds() == null) {
-            exameDaMateria.setObjetosIds(new ArrayList<>());
-        }
-        String exameId = exameSalvo.getId();
-
-        List<String> objetosIdsSalvos = new ArrayList<>();
-        for (String objetoId : exameDaMateria.getObjetosIds()) {
-            ObjetoLaudo objeto = buscarObjetoPorId(objetoId);
-
-            objeto.setExameDaMateriaId(exameId);
-            objetosIdsSalvos.add(objeto.getId());
-        }
-        exameSalvo.getObjetosIds().addAll(objetosIdsSalvos);
-        return exameDaMateriaRepository.save(exameSalvo);
     }
 
     public ExameDaMateria buscarOuFalhar(String exameId) {
@@ -83,7 +67,7 @@ public class ExameDaMateriaService {
     }
 
     public ExameDaMateria buscarPorId(String laudoId, String exameId) {
-        LaudoPericial laudoPericial = laudoPericialService.buscarOuFalhar(laudoId);
+        LaudoPericial laudoPericial = laudoPericialService.buscarPorIdOuFalhar(laudoId);
         Optional<ExameDaMateria> exameOptional = exameDaMateriaRepository.findById(exameId);
 
         return exameOptional.get();
@@ -103,13 +87,8 @@ public class ExameDaMateriaService {
         return null;
     }
 
-    private ObjetoLaudo buscarObjetoPorId(String objetoId) {
-        return objetoLaudoRepository.findById(objetoId)
-                .orElseThrow(() -> new ObjetoLaudoNaoEncontradoException(OBJETO_NAO_ENCONTRADO, objetoId));
-    }
-
     private void removerExameDoLaudoById(String laudoId) {
-        LaudoPericial laudoPericial = laudoPericialService.buscarOuFalhar(laudoId);
+        LaudoPericial laudoPericial = laudoPericialService.buscarPorIdOuFalhar(laudoId);
         laudoPericial.setExameDaMateria(null);
         laudoPericialService.salvar(laudoPericial);
     }

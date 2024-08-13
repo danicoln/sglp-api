@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface ObjetoLaudoRepository extends MongoRepository<ObjetoLaudo, String> {
 
-    List<ObjetoLaudo> findByExameDaMateriaId(String exameId);
+    List<ObjetoLaudo> findAllByExameDaMateriaId(String exameId);
 }

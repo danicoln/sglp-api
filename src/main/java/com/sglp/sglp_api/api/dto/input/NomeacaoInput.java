@@ -3,6 +3,7 @@ package com.sglp.sglp_api.api.dto.input;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Getter
@@ -15,4 +16,6 @@ public class NomeacaoInput {
     private String aceite;
     private LocalDateTime dataAceite;
     private LocalDateTime prazo;
+    private BigDecimal honorarioHomologado;
+    private BigDecimal honorarioEnviado;
 }

@@ -37,12 +37,7 @@ public class ObjetoLaudoResource {
     @GetMapping
     public ResponseEntity<List<ObjetoLaudoModel>> listar(@PathVariable String exameId) {
         List<ObjetoLaudo> objetos = service.listar(exameId);
-        if(objetos == null || objetos.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        List<ObjetoLaudoModel> models = mapper.toModelList(objetos);
-        return ResponseEntity.ok(models);
+        return ResponseEntity.ok(mapper.toModelList(objetos));
     }
 
     @GetMapping("/{objetoId}")
@@ -62,7 +57,7 @@ public class ObjetoLaudoResource {
     }
 
     @DeleteMapping("/{objetoId}")
-    public ResponseEntity<?> remover(@PathVariable String exameId, @PathVariable String objetoId) {
+    public ResponseEntity<ObjetoLaudoModel> remover(@PathVariable String exameId, @PathVariable String objetoId) {
         ExameDaMateria exameDaMateria = service.buscarExame(exameId);
 
         if (exameDaMateria == null) {

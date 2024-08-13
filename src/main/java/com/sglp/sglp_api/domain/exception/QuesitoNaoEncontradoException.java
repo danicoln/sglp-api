@@ -7,6 +7,6 @@ public class QuesitoNaoEncontradoException extends EntidadeNaoEncontradaExceptio
     }
 
     public QuesitoNaoEncontradoException(String mensagem, String quesitoId) {
-        this(String.format("Não existe quesito com o código %d", quesitoId));
+        this(String.format("Não existe quesito com o código %s", quesitoId));
     }
 }

@@ -1,5 +1,7 @@
 package com.sglp.sglp_api.domain.model;
 
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -11,6 +13,8 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -22,8 +26,7 @@ public class LaudoPericial {
     @Id
     @EqualsAndHashCode.Include
     private String id;
-    @NotNull
-    private Processo processo;
+
     @NotBlank
     private String objetivo;
     @NotBlank
@@ -40,6 +43,12 @@ public class LaudoPericial {
     @DBRef
     private ExameDaMateria exameDaMateria;
 
-    //private List<Quesito> quesitos;
-    //private List<ObjetoLaudo> objetos;
+    @DBRef
+    private List<Quesito> quesitos = new ArrayList<>();
+    private boolean ativo;
+    private Processo processo;
+
+    @Enumerated(EnumType.STRING)
+    private Status status;
+    private String numero;
 }

@@ -27,7 +27,7 @@ public class ExameDaMateriaMapper {
     public List<ExameDaMateriaModel> toModelList(List<ExameDaMateria> objetos) {
         return objetos.stream()
                 .map(this::toModel)
-                .collect(Collectors.toList());
+                .toList();
     }
 
 }

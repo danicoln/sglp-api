@@ -16,6 +16,8 @@ public class ProcessoInput {
     private String nomeAutor;
     private String nomeReu;
     private String assunto;
+    private AdvogadoInput advogadoAutor;
+    private AdvogadoInput advogadoReu;
 
     private String laudoId;
 }

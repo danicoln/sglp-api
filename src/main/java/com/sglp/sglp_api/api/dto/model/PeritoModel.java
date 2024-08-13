@@ -13,5 +13,6 @@ public class PeritoModel {
     private String nome;
     private List<NomeacaoResumoModel> nomeacoes;
     private List<LaudoPericialResumoModel> laudosPericiais;
+    private boolean ativo;
 
 }

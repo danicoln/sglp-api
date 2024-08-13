@@ -1,44 +1,51 @@
 package com.sglp.sglp_api.domain.service;
 
+import com.sglp.sglp_api.domain.exception.NomeacaoExistenteException;
 import com.sglp.sglp_api.domain.exception.NomeacaoNaoEncontradaException;
-import com.sglp.sglp_api.domain.exception.ProcessoNaoEcontradoException;
 import com.sglp.sglp_api.domain.model.Nomeacao;
-import com.sglp.sglp_api.domain.model.Processo;
 import com.sglp.sglp_api.domain.repository.NomeacaoRepository;
-import com.sglp.sglp_api.domain.repository.ProcessoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class NomeacaoService {
 
-    @Autowired
-    private NomeacaoRepository nomeacaoRepository;
+    public static final String NOMEACAO_COM_O_MESMO_PROCESSO = "Já existe uma nomeação com o mesmo processo";
 
-    @Autowired
-    private ProcessoService processoService;
+    private final NomeacaoRepository nomeacaoRepository;
 
     public List<Nomeacao> listar() {
         return nomeacaoRepository.findAll();
     }
 
-    public Nomeacao buscarOuFalhar(String nomeacaoId) {
+    public Nomeacao buscarPorIdOuFalhar(String nomeacaoId) {
         return nomeacaoRepository.findById(nomeacaoId)
                 .orElseThrow(() -> new NomeacaoNaoEncontradaException(nomeacaoId));
     }
 
     @Transactional
     public Nomeacao salvar(Nomeacao nomeacao) {
-        Processo processo = processoService.buscarOuFalhar(nomeacao.getProcesso().getId());
-
+        boolean isProcessoExistente = nomeacaoRepository.existsByProcessoNumero(nomeacao.getProcesso().getNumero());
+        if(isProcessoExistente){
+            throw new NomeacaoExistenteException(NOMEACAO_COM_O_MESMO_PROCESSO);
+        }
         return nomeacaoRepository.save(nomeacao);
     }
 
+    @Transactional
     public void remover(String nomeacaoId) {
         nomeacaoRepository.deleteById(nomeacaoId);
+    }
+
+    @Transactional
+    public Nomeacao atualizar(String nomeacaoId, Nomeacao nomeacao) {
+        Nomeacao nomeacaoExistente = buscarPorIdOuFalhar(nomeacaoId);
+        BeanUtils.copyProperties(nomeacao, nomeacaoExistente, "id");
+        return nomeacaoRepository.save(nomeacaoExistente);
     }
 }
