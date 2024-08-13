@@ -1,13 +1,22 @@
 package com.sglp.sglp_api.domain.model;
 
+import lombok.Getter;
+
+@Getter
 public enum Parte {
 
-    AUTOR,
-    REQUERENTE,
-    EXEQUENTE,
-    EMBARGANTE,
-    REU,
-    REQUERIDO,
-    EXECUTADO,
-    EMBARGADO;
+    AUTOR("Autor"),
+    REQUERENTE("Requerente"),
+    EXEQUENTE("Exequente"),
+    EMBARGANTE("Embargante"),
+    REU("Réu"),
+    REQUERIDO("Requerido"),
+    EXECUTADO("Executado"),
+    EMBARGADO("Embargado");
+
+    private final String descricao;
+
+    Parte(String descricao) {
+        this.descricao = descricao;
+    }
 }

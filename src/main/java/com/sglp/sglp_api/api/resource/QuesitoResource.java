@@ -1,77 +1,84 @@
 package com.sglp.sglp_api.api.resource;
 
-import com.sglp.sglp_api.api.assembler.QuesitoModelAssembler;
-import com.sglp.sglp_api.api.disassembler.QuesitoInputDisassembler;
+import com.sglp.sglp_api.api.dto.input.ChatGPTRequest;
 import com.sglp.sglp_api.api.dto.input.QuesitoInput;
 import com.sglp.sglp_api.api.dto.model.QuesitoModel;
-import com.sglp.sglp_api.domain.model.ObjetoLaudo;
+import com.sglp.sglp_api.api.mapper.QuesitoMapper;
+import com.sglp.sglp_api.domain.exception.EntidadeNaoEncontradaException;
 import com.sglp.sglp_api.domain.model.Quesito;
+import com.sglp.sglp_api.domain.service.IAService;
 import com.sglp.sglp_api.domain.service.QuesitoService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.sglp.sglp_api.domain.service.strategy.QuesitoStrategy;
+import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+@AllArgsConstructor
 @RestController
-@RequestMapping("/api/quesitos")
+@RequestMapping("/api/laudos/{laudoId}/quesitos")
 public class QuesitoResource {
 
-    @Autowired
-    private QuesitoService quesitoService;
-
-    @Autowired
-    private QuesitoModelAssembler quesitoModelAssembler;
-
-    @Autowired
-    private QuesitoInputDisassembler quesitoInputDisassembler;
+    private final QuesitoService quesitoService;
+    private final QuesitoStrategy quesitoStrategy;
+    private final QuesitoMapper mapper;
+    private final IAService iaService;
 
     @GetMapping
-    public List<QuesitoModel> listar() {
-        return quesitoModelAssembler.toCollectionModel(quesitoService.listar());
+    public ResponseEntity<List<QuesitoModel>> listar(@PathVariable String laudoId) {
+        List<Quesito> quesitos = quesitoService.listar(laudoId);
+        return ResponseEntity.ok(mapper.toModelList(quesitos));
     }
 
     @GetMapping("/{quesitoId}")
-    public QuesitoModel buscar(@PathVariable String quesitoId) {
-        Quesito quesito = quesitoService.buscarOuFalhar(quesitoId);
+    public ResponseEntity<QuesitoModel> buscar(@PathVariable String quesitoId) {
+        Quesito quesito = quesitoService.buscarPorIdOuFalhar(quesitoId);
 
-        return quesitoModelAssembler.toModel(quesito);
+        return ResponseEntity.ok(mapper.toModel(quesito));
     }
 
     @PostMapping
-    public ResponseEntity<QuesitoModel> salvar(@RequestBody QuesitoInput input) {
-        Quesito quesito = quesitoInputDisassembler.toDomainObject(input);
-        QuesitoModel model = quesitoModelAssembler.toModel(quesitoService.salvar(quesito));
+    public ResponseEntity<QuesitoModel> salvar(@PathVariable String laudoId,
+                                               @RequestBody QuesitoInput input) {
+        Quesito quesito = mapper.toEntity(input);
+        QuesitoModel model = mapper.toModel(quesitoService.salvar(laudoId, quesito));
 
-        return ResponseEntity.ok().body(model);
+        return ResponseEntity.status(HttpStatus.CREATED).body(model);
     }
 
     @PutMapping("/{quesitoId}")
-    public QuesitoModel atualizar(@PathVariable String quesitoId, @RequestBody QuesitoInput input) {
-        Quesito quesitoAtual = quesitoService.buscarOuFalhar(quesitoId);
-        quesitoInputDisassembler.copyToDomainObject(input, quesitoAtual);
+    public ResponseEntity<QuesitoModel> atualizar(@PathVariable String quesitoId,
+                                                  @RequestBody QuesitoInput input) {
+        Quesito quesito = mapper.toEntity(input);
+        Quesito quesitoAtualizado = quesitoService.atualizar(quesitoId, quesito);
+        QuesitoModel model = mapper.toModel(quesitoAtualizado);
 
-        Quesito quesito = quesitoService.salvar(quesitoAtual);
-
-        return quesitoModelAssembler.toModel(quesito);
+        return ResponseEntity.ok(model);
     }
 
     @DeleteMapping("/{quesitoId}")
-    public ResponseEntity<Quesito> remover(@PathVariable String quesitoId) {
-        Quesito quesito = quesitoService.buscarOuFalhar(quesitoId);
-        if(quesito.getId().equals(quesitoId)) {
+    public ResponseEntity<QuesitoModel> remover(@PathVariable String quesitoId) {
+        try {
             quesitoService.remover(quesitoId);
             return ResponseEntity.noContent().build();
+
+        } catch (EntidadeNaoEncontradaException e) {
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.notFound().build();
     }
 
-    @PatchMapping("/{quesitoId}")
-    public QuesitoModel inserirResposta(@PathVariable String quesitoId, @RequestBody QuesitoInput input) {
-        Quesito quesitoAtual = quesitoService.buscarOuFalhar(quesitoId);
-
-        quesitoAtual.setResposta(input.getResposta());
-
-        return quesitoModelAssembler.toModel(quesitoService.salvar(quesitoAtual));
+    @PostMapping("/ia")
+    public ResponseEntity<Map<String, String>> getIAResponse(@RequestBody ChatGPTRequest request){
+        var prompt = quesitoStrategy.buildPrompt(request);
+        var response = iaService.processEntityRequest(request, prompt);
+        Map<String, String> responseBody = new HashMap<>();
+        responseBody.put("content", response);
+        return ResponseEntity.ok(responseBody);
     }
+
 }

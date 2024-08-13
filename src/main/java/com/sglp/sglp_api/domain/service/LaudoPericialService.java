@@ -2,32 +2,47 @@ package com.sglp.sglp_api.domain.service;
 
 import com.sglp.sglp_api.domain.exception.LaudoPericialNaoEncontradoException;
 import com.sglp.sglp_api.domain.model.LaudoPericial;
+import com.sglp.sglp_api.domain.model.Status;
 import com.sglp.sglp_api.domain.repository.LaudoPericialRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.sglp.sglp_api.domain.service.utils.NumeroLaudoGenerator;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class LaudoPericialService {
 
-    public static final String LAUDO_PERICIAL_NAO_ENCONTRADO = "Laudo Pericial com o ID %s não encontrado";
+    public static final String PROCESSO_AUSENTE = "Número do processo não pode ser vazio";
+    private static final String DATA_PATTERN = "yyyyMMdd";
+    private static final String NUMERACAO_PATTERN = "%s-%04d";
 
-    @Autowired
-    private LaudoPericialRepository laudoPericialRepository;
+    private final LaudoPericialRepository laudoPericialRepository;
+    private final NumeroLaudoGenerator generator;
 
     @Transactional
     public LaudoPericial salvar(LaudoPericial laudoPericial) {
-        //TODO: implementar a busca dos objetos que compoem o laudo pericial
+        String numeroProcesso = laudoPericial.getProcesso().getNumero();
 
-        /*
-        Long objetoLaudoId = laudoPericial.getObjeto().getId();
-        Long examePericiaId = laudoPericial.getExameDaMateria().getId();
-        List<Quesito> quesitos = laudoPericial.getQuesitos();
-        */
+        if(numeroProcesso == null || numeroProcesso.isEmpty()) {
+            throw new IllegalArgumentException(PROCESSO_AUSENTE);
+        }
 
+        if(laudoPericial.getNumero() == null) {
+            laudoPericial.setNumero(generator.gerarNumeroDoLaudo(LocalDateTime.now()));
+        }
+
+        if(laudoPericial.getStatus() == null){
+            laudoPericial.setStatus(Status.NAO_INICIADO);
+        }
+
+        laudoPericial.setAtivo(true);
         return laudoPericialRepository.save(laudoPericial);
     }
 
@@ -35,7 +50,11 @@ public class LaudoPericialService {
         return laudoPericialRepository.findAll();
     }
 
-    public LaudoPericial buscarOuFalhar(String laudoId) {
+    public List<LaudoPericial> listarAtivos(boolean ativo) {
+        return laudoPericialRepository.findAllByAtivo(ativo);
+    }
+
+    public LaudoPericial buscarPorIdOuFalhar(String laudoId) {
         return laudoPericialRepository.findById(laudoId)
                 .orElseThrow(() -> new LaudoPericialNaoEncontradoException(laudoId));
     }
@@ -46,23 +65,21 @@ public class LaudoPericialService {
 
     @Transactional
     public LaudoPericial atualizar(String laudoId, LaudoPericial laudo) {
-        LaudoPericial laudoExistente = validarLaudo(laudoId);
-        laudoExistente.setProcesso(laudo.getProcesso());
-        laudoExistente.setConclusao(laudo.getConclusao());
-        laudoExistente.setHistorico(laudo.getHistorico());
-        laudoExistente.setIntroducao(laudo.getIntroducao());
-        laudoExistente.setDataDoLaudo(laudo.getDataDoLaudo());
-        laudoExistente.setMetodologiaAplicada(laudo.getMetodologiaAplicada());
-        laudoExistente.setObjetivo(laudo.getObjetivo());
-        laudoExistente.setExameDaMateria(laudo.getExameDaMateria());
-//        laudoExistente.setObjetos(laudo.getObjetos());
-//        laudoExistente.setQuesitos(laudo.getQuesitos());
-
-        return salvar(laudoExistente);
+        LaudoPericial laudoExistente = buscarPorIdOuFalhar(laudoId);
+        BeanUtils.copyProperties(laudo, laudoExistente, "id", "numero", "ativo", "exameDaMateria");
+        laudoExistente.setStatus(laudo.getStatus());
+        return laudoPericialRepository.save(laudoExistente);
     }
 
-    private LaudoPericial validarLaudo(String laudoId) {
-        return this.buscar(laudoId)
-                .orElseThrow(() -> new LaudoPericialNaoEncontradoException(LAUDO_PERICIAL_NAO_ENCONTRADO, laudoId));
+    public void ativar(String laudoId) {
+        LaudoPericial laudoAtualizado = buscarPorIdOuFalhar(laudoId);
+        laudoAtualizado.setAtivo(true);
+        laudoPericialRepository.save(laudoAtualizado);
+    }
+
+    public void desativar(String laudoId) {
+        LaudoPericial laudoAtualizado = buscarPorIdOuFalhar(laudoId);
+        laudoAtualizado.setAtivo(false);
+        laudoPericialRepository.save(laudoAtualizado);
     }
 }

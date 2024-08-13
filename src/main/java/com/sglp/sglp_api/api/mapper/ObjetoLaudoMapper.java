@@ -27,7 +27,7 @@ public class ObjetoLaudoMapper {
     public List<ObjetoLaudoModel> toModelList(List<ObjetoLaudo> objetos) {
         return objetos.stream()
                 .map(this::toModel)
-                .collect(Collectors.toList());
+                .toList();
     }
 
 }

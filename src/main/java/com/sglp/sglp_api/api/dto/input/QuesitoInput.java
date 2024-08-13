@@ -8,7 +8,9 @@ import lombok.Setter;
 @Setter
 public class QuesitoInput {
 
+    private String id;
     private Parte parte;
-    private String quesito;
+    private String pergunta;
     private String resposta;
+    private String laudoId;
 }

@@ -4,11 +4,11 @@ import com.sglp.sglp_api.domain.exception.ObjetoLaudoNaoEncontradoException;
 import com.sglp.sglp_api.domain.model.ExameDaMateria;
 import com.sglp.sglp_api.domain.model.ObjetoLaudo;
 import com.sglp.sglp_api.domain.repository.ObjetoLaudoRepository;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -23,12 +23,12 @@ public class ObjetoLaudoService {
     private ExameDaMateriaService exameDaMateriaService;
 
     public List<ObjetoLaudo> listar(String exameId) {
-        return objetoLaudoRepository.findByExameDaMateriaId(exameId);
+        return objetoLaudoRepository.findAllByExameDaMateriaId(exameId);
     }
 
     public ObjetoLaudo buscarPorId(String exameId, String objetoId) {
         ExameDaMateria exame = exameDaMateriaService.buscarOuFalhar(exameId);
-        ObjetoLaudo objetoEncontrado = buscarOuFalhar(objetoId);
+        ObjetoLaudo objetoEncontrado = buscarPorIdOuFalhar(objetoId);
 
         if (!exame.getId().equals(objetoEncontrado.getExameDaMateriaId())) {
             throw new ObjetoLaudoNaoEncontradoException(OBJETO_NAO_ENCONTRADO, objetoId);
@@ -36,7 +36,7 @@ public class ObjetoLaudoService {
         return objetoEncontrado;
     }
 
-    public ObjetoLaudo buscarOuFalhar(String objetoId) {
+    public ObjetoLaudo buscarPorIdOuFalhar(String objetoId) {
         return objetoLaudoRepository.findById(objetoId)
                 .orElseThrow(() -> new ObjetoLaudoNaoEncontradoException(objetoId));
     }
@@ -48,6 +48,7 @@ public class ObjetoLaudoService {
         return objetoLaudoRepository.save(objeto);
     }
 
+    @Transactional
     public void remover(String objetoId) {
         objetoLaudoRepository.deleteById(objetoId);
     }
@@ -58,10 +59,8 @@ public class ObjetoLaudoService {
 
     @Transactional
     public ObjetoLaudo atualizar(String objetoId, ObjetoLaudo objetoLaudo) {
-        ObjetoLaudo objetoExistente = buscarOuFalhar(objetoId);
-        objetoExistente.setNomeTitulo(objetoLaudo.getNomeTitulo());
-        objetoExistente.setDescricao(objetoLaudo.getDescricao());
-        objetoExistente.setData(objetoLaudo.getData());
+        ObjetoLaudo objetoExistente = buscarPorIdOuFalhar(objetoId);
+        BeanUtils.copyProperties(objetoLaudo, objetoExistente, "id");
         return objetoLaudoRepository.save(objetoExistente);
     }
 

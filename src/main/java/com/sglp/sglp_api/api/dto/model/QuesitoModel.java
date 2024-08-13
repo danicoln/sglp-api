@@ -10,6 +10,7 @@ public class QuesitoModel {
 
     private String id;
     private Parte parte;
-    private String quesito;
+    private String pergunta;
     private String resposta;
+    private String laudoId;
 }

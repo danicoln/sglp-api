@@ -16,6 +16,8 @@ public class ProcessoModel {
     private String nomeAutor;
     private String nomeReu;
     private String assunto;
+    private AdvogadoModel advogadoAutor;
+    private AdvogadoModel advogadoReu;
 
     private String laudoId;
 }
